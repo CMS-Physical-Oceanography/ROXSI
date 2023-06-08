@@ -1,4 +1,4 @@
-khjykmoikiolploikjhgjkjuju%% Getting Started
+%% Getting Started
 %   Noah Clark
 %   5/16/2023
 
@@ -14,13 +14,8 @@ clc;clear;
 %       - are the datetime vectors all correct and perfectly matching up? (I don't think so)
 %           - I think that the wind datetime conversion converted 8 hours
 %           in the wrong direction (should also be 7 instead of 8)
-%       - spend time to make code more reusable
-%       - go through and delete the extra code/comments
-%       - 
-%       - 
-%       - start reading the JPO spectral waves reading 
-%       - look at mice on amazon
-%       - 
+%       - spend time to make code more reusable (? ask how I could do this)
+
 
 
 %% Questions I have
