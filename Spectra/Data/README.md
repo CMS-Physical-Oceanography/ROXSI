@@ -1,12 +1,12 @@
 ## CO-OPS_9413450_met.csv
-**Tide Data from NOAA
+**Tide Data from NOAA**
 * Units: meters
 * Time: entire year of 2022
 * Time-Zone: LST (Monterey Bay)
 * Datum: NAVD
 
 ## MBARI2022.mat
-**Offshore wind data 
+**Offshore wind data**
 * the main use is to have some type of wind data for the portion of time where the nearshore wind data was not being recorded
 
 ## mooringtable_largescale_2022.mat
