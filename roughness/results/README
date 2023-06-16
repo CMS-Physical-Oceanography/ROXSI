@@ -1,1 +1,32 @@
-This folder contains the results of our analysis.
+This folder contains results from our analysis.
+
+==========================================================================================================================================================
+File:
+  variable_grid_roughness.mat
+
+Description:
+  This contains std(z'), mean cell depth, and the lat/lon coordinates for 22 grids ranging from 10m to 1500m horizontal resolution over the Asilomar Beach
+  and China Rock high resolution bathymetry. Grids were derived from the 100m model grid created by Dr. Suanda and Dr. Ramierez. Figures showing std(z') 
+  for all grid resolutions included here can be found in ROXSI/figures/variable_grid_roughness.
+
+Created With:
+  variable_grid_rgh.ipynb
+  
+Variables:
+1. G10rgh     
+     .
+     .
+  G1500rgh (2d array) : std(z') for different grids where the resolution is an integer following G. These were calculated for each cell using 
+                         get_cell_roughness() in cell_roughness.py.
+
+2. G10h
+    .
+    .
+  G1500h (2d array) : mean depth of grid cells.
+
+3. G10_lat / G10_lon
+    .
+    .
+  G1500_lat / G1500_lon (2d array) : Coordinates of grid cell verticies.
+
+==============================================================================================================================================================
