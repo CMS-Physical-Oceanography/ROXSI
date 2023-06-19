@@ -14,8 +14,16 @@ clc;clear;
 %       - are the datetime vectors all correct and perfectly matching up? (I don't think so)
 %           - I think that the wind datetime conversion converted 8 hours
 %           in the wrong direction (should also be 7 instead of 8)
-%       - spend time to make code more reusable (? ask how I could do this)
-
+%           - plot Hsig to see
+%       - try to make code more reusable (? ask how I could do this)
+%       - break up Start.m into smaller m files
+%           - upload to github
+%           - comment in to describe all variables (Variables.mat)(stopped at Gfreq)
+%           - remember to edit name for files where I plot; example:
+%             plot_Spectro.m and load_WBdata.m
+%
+%
+%
 
 
 %% Questions I have
@@ -27,9 +35,6 @@ clc;clear;
 %               been 
 %       - how could I make the script better in general (formatting,
 %       comments, etc.)?
-%       
-
-%% Given Help
 
 
 %% Important Notes
@@ -59,8 +64,6 @@ for i = 1:length(Bspotters)
     BGivenHsig{i} = spotterL2.Hsig;
     Bdepth{i} = -spotterL2.bottomdepth;
     BEMEM{i} = spotterL2.EMEM.meandir_f;
-    Bx{i} = spotterL2.X;
-    By{i} = spotterL2.Y;
 end
 
 BSee{2} = cat(2,BSee{2},BSee{1});   %Buoy 1 had to be taken out of water and put back in at a later time so we must concatenate the data
@@ -74,8 +77,6 @@ for i = 1:3     %shifting everything down (forget about {4} becuase it is now th
     BGivenHsig{i} = BGivenHsig{i+1};
     Bdepth{i} = Bdepth{i+1};
     BEMEM{i} = BEMEM{i+1};
-    Bx{i} = Bx{i+1};
-    By{i} = By{i+1};
 end
 
 
@@ -91,8 +92,6 @@ for i = 1:length(Xspotters)
     XGivenHsig{i} = spotterL2.Hsig;
     Xdepth{i} = -spotterL2.bottomdepth;
     XEMEM{i} = spotterL2.EMEM.meandir_f;
-    Xx{i} = spotterL2.X;
-    Xy{i} = spotterL2.Y;
 end
 
 
@@ -141,26 +140,28 @@ WindSpd = isparL1.windspd;
 OffWind = load('MBARI2022.mat');
 %   -indecies: 3757:4537 (15 June 20:00:00 GMT  -  18 July 15:00:00 GMT)
 %   -between 4537 and 4538 the data skips 10 days
+OffWindTime = OffWind.NOAA.time(3757:4537);
+    OffWindTime = datetime(OffWindTime,'convertfrom','datenum','TimeZone','GMT');
+    OffWindTime = datetime(OffWindTime','TimeZone','America/Los_Angeles');
+    OffWindTime = datetime(OffWindTime','TimeZone','local');
+OffWindDir = OffWind.NOAA.wind.WDIR(3757:4537);
+OffWindSpd = OffWind.NOAA.wind.WSPD(3757:4537);
 
+    %Model See data to add to animation:
+ModelSee = load('Dir_Spec_X01_SWAN.mat');
+        %To save memory (in GitHub) make the Snn variable equal 0 (the
+        %important variable used is Snn_f)
+            ModelSee.B01.Snn = 0;
+            ModelSee.X01.Snn = 0;
 
     %The names of all the buoys:
 BBuoyName = {'B01' 'B03' 'B05'};
 XBuoyName = {'X01' 'X03' 'X04'};
-OffWindTime = OffWind.NOAA.time(3757:4537);
-%for i = 1:797
-    OffWindTime = datetime(OffWindTime,'convertfrom','datenum');
-    OffWindTime = datetime(string(OffWindTime),'TimeZone','GMT');
-    OffWindTime = datetime(OffWindTime','TimeZone','America/Los_Angeles');
-    OffWindTime = datetime(OffWindTime','TimeZone','local');
-%end
-OffWindDir = OffWind.NOAA.wind.WDIR(3757:4537);
-OffWindSpd = OffWind.NOAA.wind.WSPD(3757:4537);
 
 
     %Other Variables:
 df = 0.0098;
 plotcolors = 'rbgmkc';  %to index when plotting in for loop
-
 
 
 
@@ -257,7 +258,7 @@ Length_BShoreVec = sqrt(BShoreVec(1)^2 + BShoreVec(2)^2);
 
 XShoreVec = [ShoreP.X.Point2.xutm - ShoreP.X.Point1.xutm,...
     ShoreP.X.Point2.yutm - ShoreP.X.Point1.yutm];
-Length_XShoreVec = sqrt(XShoreVec(1)^2 + XShoreVec(2)^2);
+Length_XShoreVec = sqrt(XShoreVec(1)^2 + XShoreVec(2)^2); 
 
 NorthVec = [0 1];
 Length_NorthVec = 1;
@@ -265,10 +266,38 @@ Length_NorthVec = 1;
 XShoreDir = acosd(dot(NorthVec,XShoreVec)/(Length_XShoreVec*Length_NorthVec));
 BShoreDir = acosd(dot(NorthVec,BShoreVec)/(Length_BShoreVec*Length_NorthVec));
 
-XNormWaveDir = 270 + XShoreDir;
-BNormWaveDir = 270 + BShoreDir;
+XNormWaveDir = 270 + XShoreDir
+BNormWaveDir = 270 + BShoreDir
 
+function_NormDir(36.602756,-121.961542,36.608361,-121.958869)
 
+%% Comparing how far from normal the average directions are
+
+B1MeanDir = mean(BEMEM{1},'all');
+B1DirDiff = BNormWaveDir - B1MeanDir;
+
+B2MeanDir = mean(BEMEM{2},'all');
+B2DirDiff = BNormWaveDir - B2MeanDir;
+
+B3MeanDir = mean(BEMEM{3},'all');
+B3DirDiff = BNormWaveDir - B3MeanDir;
+
+X1MeanDir = mean(XEMEM{1},'all');
+X1DirDiff = XNormWaveDir - X1MeanDir;
+
+X2MeanDir = nanmean(XEMEM{2},'all');
+X2DirDiff = XNormWaveDir - X2MeanDir
+
+X3MeanDir = mean(XEMEM{3},'all');
+X3DirDiff = XNormWaveDir - X3MeanDir;
+
+Location = ["China Rock";"Asilomar"];
+Buoy_1_AvgDirDiff = [B1DirDiff;X1DirDiff];
+Buoy_2_AvgDirDiff = [B2DirDiff;X2DirDiff];
+Buoy_3_AvgDirDiff = [B3DirDiff;X3DirDiff];
+
+NormalDirectionDifference = table(Location,Buoy_1_AvgDirDiff,...
+    Buoy_2_AvgDirDiff,Buoy_3_AvgDirDiff)
 
 
 %% Plotting the Locations of the Wave Buoys
@@ -282,7 +311,7 @@ set(gcf,'position',[450,570,450,450])
 %  geolimits(nlat,nlon)
 geoscatter(ChinaLAT,ChinaLON,'sb','linewidth',10)
 hold on
-GS1 = geoscatter(AsilomarLAT,AsilomarLON,'sr','linewidth',10);
+geoscatter(AsilomarLAT,AsilomarLON,'sr','linewidth',10);
 geobasemap satellite
 legend('China Rock','Asilomar','location','northwest')
 title('General Location of China Rock and Asilomar')
@@ -374,7 +403,7 @@ end
    
     
     
-%% Calculate Hsig from X01 and compare with given
+%% Calculate Hsig from WB spectrums and compare with given
 % This is done knowing that the area under the time-averaged spectrum is
 % the significant wave height
 
@@ -445,48 +474,82 @@ end
 
 
 
+%% Calculate Hsig for the model spectrum
+% - used trapz here but used sum and df method above
+%   - I have checked that they give the same results
+
+for i = 1:787
+    M_Hsig(i) = 4*(sqrt(trapz(ModelSee.X01.f,ModelSee.X01.Snn_f(:,i),1)));
+end
+
+
+
 %% Make an animation of the spectrum from X01
-%   - Add the wind(compass form) to top subplot of animation
-%   - Add textbox annotations to note the significant wave height, peak
-%   wavelength, mean wavelength, wind speed, wind direction, 
 
     %Change the folder to save the animation figures to
-cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)\Start Figures\X01 Spectrum Animation'
+cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)\Start Figures\Youtube Animation'
 addpath 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)'
 
 figure(20);clf
 set(gcf,'position',[1350,40,450,450])
-%xx = 1:832
+%277:444(June 27th - July 3rd)
 for xx = 1:832
-%    figure(20);clf;
+%   figure(20);clf;
 %    delete(findall(gcf,'type','annotation'))
-    
-    if xx < 215
+%     
+%     if xx < 215
 %        annotation('textbox',[0.32,0.8,0.4,0.07],'string','No Wind Data for this Time')
-    end
-    if xx > 214
+%     end
+%     if xx > 214
 %        subplot(3,1,1)
 %        title('Wind Direction and Speed (m/s)')
 %        hidden_arrow = compass(9.5,0);
 %        hidden_arrow.Color = 'none';
 %        hold on
-        [u,v] = pol2cart(deg2rad(WindDir(xx - 214)),WindSpd(xx - 214));
+%        [u,v] = pol2cart(deg2rad(WindDir(xx - 214)),WindSpd(xx - 214));
 %        c = compass(u,v,'r');
 %        c.LineWidth = 3;
+%        ax = ancestor(c(1),'axes');
+%        th = findall(ax,'Type','Text');
+%        set(th,'FontSize',8)
+%        %c.fontsize = 7;
 %        view(90,-90)
-%         annotation('textbox',[0.7,0.8,0.27,0.1],'String',...
+%         annotation('textbox',[0.7,0.83,0.27,0.1],'String',...
 %             sprintf('Wind Speed (m/s): %1s',...
 %             sprintf('%g\n',round(WindSpd(xx - 214),2))),'fontsize',9)
-%         annotation('textbox',[0.7,0.7,0.27,0.1],'String',...
+%         annotation('textbox',[0.7,0.73,0.27,0.1],'String',...
 %             sprintf('Wind Direction (degrees): %1s',...
 %             sprintf('%g\n',round(WindDir(xx - 214),2))),'fontsize',9)
-%         title({'Wind Speed and Direction',''})
-        hold off
-    end
+%         title({'Wind Speed and Direction',''},'fontsize',11)
+%         hold off
+%     end
+% 
+% %Plotting:
+%     subplot(3,1,[2:3])
+%     plot(Xfreq{1},XSee{1}(:,xx),'k','LineWidth',1.5)
+% 
+%     if xx > 35 && xx < 823
+%         hold on
+%         yy = xx - 35;
+%         plot(ModelSee.X01.f,ModelSee.X01.Snn_f(:,yy),'r','LineWidth',1.5)
+% 
+%         annotation('textbox',[0.55,0.49,0.34,0.06],'String',...
+%             sprintf('Theoretical H_1_/_3 (m): %1s',...
+%             sprintf('%g\n',round(M_Hsig(yy),2))),'fontsize',9)
+%         legend('Observed','Modeled','location','southeast')
+%     end
+% 
+%     hold on
+%     xlabel('Frequency (Hz)')
+%     ylabel('Energy (m^2/Hz)')
+%     grid on
+%     axis([0 0.5 0 3.5])
+%     title({'',sprintf('Frequency Spectrum for Bouy X01 @ %1s',Xtime{1}(xx))})
+%     if xx < 35 && xx > 823 
+%         legend('Observed','Modeled','location','southeast')
+%     end    
     
-%    subplot(3,1,[2:3])
-%    plot(Xfreq{1},XSee{1}(:,xx),'m','LineWidth',2)
-    
+    %Calculations:
         %Determining L from peak frequency/period:
             [m,indPeakFreq] = max(XSee{1}(:,xx));
             Tp(xx) = 1/Xfreq{1}(indPeakFreq);
@@ -506,57 +569,51 @@ for xx = 1:832
         %Determing mean bottom orbital velocity:
             mBOV(xx) = (XGivenHsig{1}(xx)*pi)/(Tm(xx)*...
                 sinh(mWaveNumber(xx)*Xdepth{1}(xx)));
-            
-%     hold on
-%      xlabel('Frequency (Hz)')
-%     ylabel('Energy (m^2/Hz)')
-%     grid on
-%     axis([0 0.5 0 6.8])
-%     title({'',sprintf('Frequency Spectrum for Bouy X01 @ %1s',Xtime{1}(xx))})
+                
+%         %Adding Annotations:
+%             annotation('textbox',[0.55,0.55,0.34,0.06],'String',...
+%                sprintf(' Measured H_1_/_3 (m): %1s',...
+%                sprintf('%g\n',round(Xt_Hsig{1}(xx),2))),'fontsize',9)
+%            annotation('textbox',[0.65,0.41,0.229,0.06],'String',...
+%                sprintf('L_p (m): %1s',...
+%                sprintf('%g\n',round(pWavelength(xx),2))),'fontsize',9)
+%             annotation('textbox',[0.65,0.35,0.229,0.06],'String',...
+%                sprintf('L_m (m): %1s',...
+%                sprintf('%g\n',round(mWavelength(xx),2))),'fontsize',9)
+%            annotation('textbox',[0.65,0.29,0.229,0.06],'String',...
+%                sprintf('u_p (m/s): %1s',...
+%                sprintf('%g\n',round(pBOV(xx),2))),'fontsize',9)
+%            annotation('textbox',[0.65,0.23,0.229,0.06],'String',...
+%                sprintf('u_m (m/s): %1s',...
+%               sprintf('%g\n',round(mBOV(xx),2))),'fontsize',9)
+%     
+% %To display the progress of the for-loop:
+%     if xx == 0
+%         disp('X01 Animation Loop is Starting')
+%     elseif xx == 83
+%         disp('X01 Animation Loop is 1/10 Complete')
+%     elseif xx == 166
+%         disp('X01 Animation Loop is 2/10 Complete')
+%     elseif xx == 249
+%         disp('X01 Animation Loop is 3/10 Complete')
+%     elseif xx == 332
+%         disp('X01 Animation Loop is 4/10 Complete')
+%     elseif xx == 415
+%         disp('X01 Animation Loop is 5/10 Complete')
+%     elseif xx == 500
+%         disp('X01 Animation Loop is 6/10 Complete')
+%     elseif xx == 580
+%         disp('X01 Animation Loop is 7/10 Complete')
+%     elseif xx == 664
+%         disp('X01 Animation Loop is 8/10 Complete')
+%     elseif xx == 747
+%         disp('X01 Animation Loop is 9/10 Complete')
+%     elseif xx == 832
+%         disp('X01 Animation Loop is Complete')
+%     end
     
-        %Adding Annotations:
-%    annotation('textbox',[0.65,0.55,0.22,0.06],'String',...
-%        sprintf('H_1_/_3 (m): %1s',...
-%        sprintf('%g\n',round(Xt_Hsig{1}(xx),2))),'fontsize',9)
-%    annotation('textbox',[0.65,0.48,0.22,0.06],'String',...
-%        sprintf('L_p (m): %1s',...
-%        sprintf('%g\n',round(pWavelength(xx),2))),'fontsize',9)
-%     annotation('textbox',[0.65,0.41,0.22,0.06],'String',...
-%        sprintf('L_m (m): %1s',...
-%        sprintf('%g\n',round(mWavelength(xx),2))),'fontsize',9)
-%    annotation('textbox',[0.65,0.34,0.22,0.06],'String',...
-%        sprintf('u_p (m/s): %1s',...
-%        sprintf('%g\n',round(pBOV(xx),2))),'fontsize',9)
-%    annotation('textbox',[0.65,0.27,0.22,0.06],'String',...
-%        sprintf('u_m (m/s): %1s',...
-%       sprintf('%g\n',round(mBOV(xx),2))),'fontsize',9)
-    
-    %pause(0.3);clf;    %this is for running the animation in matlab
-    %saveas(figure(8),sprintf('X01_Frame%1d.jpeg',xx))
-    
-    if xx == 0
-        disp('X01 Animation Loop is Starting')
-    elseif xx == 83
-        disp('X01 Animation Loop is 1/10 Complete')
-    elseif xx == 166
-        disp('X01 Animation Loop is 2/10 Complete')
-    elseif xx == 249
-        disp('X01 Animation Loop is 3/10 Complete')
-    elseif xx == 332
-        disp('X01 Animation Loop is 4/10 Complete')
-    elseif xx == 415
-        disp('X01 Animation Loop is 5/10 Complete')
-    elseif xx == 500
-        disp('X01 Animation Loop is 6/10 Complete')
-    elseif xx == 580
-        disp('X01 Animation Loop is 7/10 Complete')
-    elseif xx == 664
-        disp('X01 Animation Loop is 8/10 Complete')
-    elseif xx == 747
-        disp('X01 Animation Loop is 9/10 Complete')
-    elseif xx == 832
-        disp('X01 Animation Loop is Complete')
-    end
+%%pause(0.3);clf;    %this is for running the animation in matlab
+%%saveas(figure(20),sprintf('YT1_Frame%1d.jpeg',xx))
 end
 
 
@@ -626,7 +683,7 @@ legend('Mean (L_m)','Peak (L_p)','Orientation','Horizontal',...
 grid on
 
     %Wave Orbital Excursion:
-%First must calculate the peak and max (DOUBLE CHECK THAT I DID THIS RIGHT)
+%First must calculate the peak and mean (DOUBLE CHECK THAT I DID THIS RIGHT)
 EXp = pBOV./(2*pi./Tp);
 EXm = mBOV./(2*pi./Tm);
 %Now, plotting
@@ -746,6 +803,7 @@ LB1y2 = [0 0.55];
 
 %China Rock Buoys:
 figure(16);clf;
+set(gcf,'position',[800,300,500,700])
 for i = 1:3
     subplot(3,1,i)
     pcolor(Btime{i},Gfreq,BEMEM{i})
@@ -770,9 +828,9 @@ end
 
 %Asilomar Buoys:
 figure(17);clf;
+set(gcf,'position',[950,300,500,700])
 for i = 1:3
     subplot(3,1,i)
-    set(gcf,'position',[950,300,500,700])
     pcolor(Xtime{i},Gfreq,XEMEM{i})
     shading flat
     cb = colorbar;
@@ -793,7 +851,7 @@ end
     
 
 
-%% Save all figures and tables
+%% Save all figures, tables, and important variables
 % update this as more figures are made using Start.m
 
 %Save figures in the "Start Figures" Folder
@@ -806,51 +864,25 @@ end
 %Reassign the cd to "Start 5-16"
 cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)'
 
+%Save variables to WBvariables.mat
+save('WBvariables.mat','Bdepth','BEMEM','Bfreq','BGivenHsig','Bt_Hsig',...
+    'Blat','Blon','BSee','Bmeanspec','Btime','BNormWaveDir','Xdepth',...
+    'XEMEM','Xfreq','XGivenHsig','Xlat','Xlon','XSee','Xtime','XavgD',...
+    'M_Hsig','ModelSee','mooringLat','mooringLon','mooringtable','NOAA',...
+    'OffWindDir','OffWindSpd','OffWindTime','plotcolors','WindDir',...
+    'WindDT','WindSpd','NormalDirectionDifference','EXm','EXp','fm','fp',...
+    'Tm','Tp','Gfreq','Hsig','mBOV','pBOV','mCelerity','pCelerity',...
+    'mWavelength','pWavelength','ShoreP','Table_Hsig','XNormWaveDir',...
+    'ChinaLAT','ChinaLON','AsilomarLAT','AsilomarLON','Xmeanspec',...
+    'Xt_Hsig')
 
 
 
 %% Functions Used
 
 
-function [Wavelength,WaveNumber,WaterDepthParameter,WaveSteepness,RelativeDepth,Clerity]= wavecalculateSI(period,height,depth)
-
-%WAVECALCULATESI calculates an accurate estimate of the wavelength, wave
-%       number, and celerity of a function using Newton's Method.
-%
-%Input Arguments:
-%period: the wave period in seconds
-%height: the wave height in meters
-%depth: the wave depth in meters
-%Output Argument:
-%Wavelength: (L) the wavelength of the wave in meters
-%WaveNumber: (k=2pi/L) the wave number 
-%Clerity: (c=L/T) the wave speed in meters per second
-
-L0 = 1;
-Lprev = L0;
-Lnew = 0;
-thresh = 0.01;
-g = 9.81; %gravitational acceleration (9.81 m/s^2)
-delta = 1;
-
-
-while delta > thresh
-    Lprev = Lnew;
-    Lnew=(g*period^2)/(2*pi)*tanh((2*pi*depth)/Lprev);
-    delta=abs(Lnew-Lprev);
-end
-
-Wavelength = Lnew;
-k=(2*pi)/Lnew;
-WaveNumber = k;
-WaterDepthParameter = k*depth;
-WaveSteepness = height/Lnew;
-RelativeDepth = depth/Lnew;
-Clerity = Lnew/period;
-
-end
-
-
+% WAVECALCULATESI - calculates an accurate estimate of the wavelength, wave
+%                   number, and celerity of a function using Newton's Method.
 
 
 
