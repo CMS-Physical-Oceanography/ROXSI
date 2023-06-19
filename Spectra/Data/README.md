@@ -1,3 +1,12 @@
+## WBvariables.mat
+**Every important variable calculated in Start.m**
+* basically all other scripts load in this data at the beginning to use within the script
+* in the future, the size of this file may become a concern (must stay under 25 mb)
+
+## Dir_Spec_X01_SWAN.mat
+* data from the Swan model for buoy X01 to see what the theoretical frequency spectrum would be using this model
+* Equivalent to the model version of Bsee or Xsee 
+
 ## CO-OPS_9413450_met.csv
 **Tide Data from NOAA**
 * Units: meters
