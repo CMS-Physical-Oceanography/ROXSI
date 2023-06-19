@@ -1,5 +1,5 @@
-function [NormWaveDir] = NormDir(SPAlat,SPAlon,SPBlat,SPBlon)
-%NORMWAVEDIR determines what incoming wave angle will be normal to the
+function [NormWaveDir] = function_NormDir(SPAlat,SPAlon,SPBlat,SPBlon)
+%FUNCTION_NORMWAVEDIR determines what incoming wave angle will be normal to the
 %             shore in Monterey Bay, California. This function uses the formula:
 %             dot(A,B) = |A||B|cos(theta)
 %

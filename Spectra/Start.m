@@ -269,7 +269,8 @@ BShoreDir = acosd(dot(NorthVec,BShoreVec)/(Length_BShoreVec*Length_NorthVec));
 XNormWaveDir = 270 + XShoreDir
 BNormWaveDir = 270 + BShoreDir
 
-function_NormDir(36.602756,-121.961542,36.608361,-121.958869)
+
+
 
 %% Comparing how far from normal the average directions are
 
@@ -555,14 +556,14 @@ for xx = 1:832
             Tp(xx) = 1/Xfreq{1}(indPeakFreq);
             fp(xx) = 1/Tp(xx);
             [pWavelength(xx),pWaveNumber(xx),pCelerity(xx)] = ...
-            wavecalculateSI(Tp(xx),XGivenHsig{1}(xx),Xdepth{1}(xx));
+            function_wavecalculateSI(Tp(xx),XGivenHsig{1}(xx),Xdepth{1}(xx));
         %Determining L from energy weighted mean frequency/period:
             m0 = trapz(Xfreq{1},XSee{1}(:,xx),1);
             m1 = trapz(Xfreq{1},XSee{1}(:,xx).*Xfreq{1},1);
             Tm(xx) = m0/m1;
             fm(xx) = 1/Tm(xx);
             [mWavelength(xx),mWaveNumber(xx),mCelerity(xx)] = ...
-            wavecalculateSI(Tm(xx),XGivenHsig{1}(xx),Xdepth{1}(xx));
+            function_wavecalculateSI(Tm(xx),XGivenHsig{1}(xx),Xdepth{1}(xx));
         %Determing peak bottom orbital velocity:
             pBOV(xx) = (XGivenHsig{1}(xx)*pi)/(Tp(xx)*...
                 sinh(pWaveNumber(xx)*Xdepth{1}(xx)));
@@ -881,7 +882,7 @@ save('WBvariables.mat','Bdepth','BEMEM','Bfreq','BGivenHsig','Bt_Hsig',...
 %% Functions Used
 
 
-% WAVECALCULATESI - calculates an accurate estimate of the wavelength, wave
+% function_WAVECALCULATESI - calculates an accurate estimate of the wavelength, wave
 %                   number, and celerity of a function using Newton's Method.
 
 
