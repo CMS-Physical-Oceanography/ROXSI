@@ -14,7 +14,7 @@
 * plot_WBX01TS.m
   
 ### Calculations
-* NormDir.m - 
+* NormDir.m - determine the incoming normal wave directions for the shoreline at China Rock and for the shoreline at Asilomar; also create a table comparing if the wave directions get closer to normal as the waves near the shore
 
 ### Functions
 * function_NormDir.m - calculates what incoming wave angle will be normal to the shore in Monterey Bay, California
