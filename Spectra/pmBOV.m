@@ -73,6 +73,8 @@ for i = 2:3
                 sinh(BmWaveNumber{i}(xx)*Bdepth{i}(xx)));
     end
 end
+XTp{2}(173) = NaN;  %set to NaN; otherwise would be infinity and mess other things up for the future
+Xfp{2}(173) = NaN;
 
 % - China Rock buoy B01 doesn't work for this method because there are only
 %    725 values for many of the variables (I'm not sure how to get trapz to 

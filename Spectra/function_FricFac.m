@@ -24,7 +24,7 @@ load('WBvariables.mat')
 
 % Constants:
 A_omegaf = 2*pi*Freq;
-kw = 1; %m      %horizontal roughness length    %set to 1 in Lowe paper
+kw = 0.16; %m      %horizontal roughness length    %set to 1 in Lowe paper
 df = 0.0098;
 ff = [1:129].*df;
 omegaf = 2*pi*ff;
@@ -80,7 +80,7 @@ switch Method
             f(j) = j*df;
             T(j) = 1/f(j);
             omega(j) = 2*pi*f(j);
-            H(j) = sum(See(j,1:832))*df;    %times 4???
+            H(j) = 4*nansum(See(j,1:832))*df;    %times 4???
             a(j) = H(j)/2;
             [L,k(j),WDP,WS,RD,C] = function_wavecalculateSI(T(j),H(j),h);
             u_bj(j) = a(j)*omega(j)/(sinh(k(j)*h)); %eqn 22 Lowe
@@ -91,7 +91,9 @@ switch Method
         
         figure(200);clf;
         plot(ff,f_w)
-        title({sprintf('Friction Factor vs Frequency using the Representative Method for Buoy %1s',Buoy),[]},'fontsize',11)
+        title({'Friction Factor vs Frequency using the Representative',...
+            sprintf('Bottom Orbital Velocity Method for Buoy %1s',Buoy)},...
+            'fontsize',11)
         %xlim([0 0.5]);ylim([0 1]);
         hold on
         
@@ -107,7 +109,9 @@ switch Method
         
         figure(200);clf;
         plot(ff,f_w)
-        title({sprintf('Friction Factor vs Frequency using the Mean Method for Buoy %1s',Buoy),[]},'fontsize',11)
+        title({'Friction Factor vs Frequency using the Mean',...
+            sprintf('Bottom Orbital Velocity Method for Buoy %1s',Buoy)},...
+            'fontsize',11)
         %xlim([0 0.5]);ylim([0 30]);
         hold on
         
@@ -123,7 +127,9 @@ switch Method
         
         figure(200);clf;
         plot(ff,f_w)
-        title({sprintf('Friction Factor vs Frequency using the Peak Method for Buoy %1s',Buoy),[]},'fontsize',11)
+        title({'Friction Factor vs Frequency using the Peak',...
+            sprintf('Bottom Orbital Velocity Method for Buoy %1s',Buoy)},...
+            'fontsize',11)
         %xlim([0 0.5]);ylim([0 3]);
         hold on
         
@@ -154,6 +160,6 @@ end
 
 end
 
-
+% I think something about the wave heights is wrong for mean and peak
 
 
