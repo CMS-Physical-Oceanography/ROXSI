@@ -15,8 +15,9 @@
   
 ### Calculations
 * NormDir.m - determine the incoming normal wave directions for the shoreline at China Rock and for the shoreline at Asilomar; also create a table comparing if the wave directions get closer to normal as the waves near the shore
+* pmBOV.m - determines the peak and mean time-weighted frequencies, periods, bottom orbital velocities, and wavelengths for all buoys at Asilomar and China Rock
 
 ### Functions
 * function_NormDir.m - calculates what incoming wave angle will be normal to the shore in Monterey Bay, California
 * function_wavecalculateSI.m - calculates the wavelength, wave number, and celerity 
-
+* function_FricFac.m - determines the friction factor based on a specified frequency, buoy, and method; and a plot is created of the frequency factor curve as a function of frequency; if 0 is entered as the input frequency, the returned plot will not have a specific frequency and/or friction factor marked
