@@ -7,12 +7,12 @@
     % Purpose: 
     %          - create a figure showing the time series plots of Hsig,
     %          energy-weighted mean and peak frequency, mean and peak
-    %          bottom orbital velocty, mean and peak wavelength, and mean
+    %          bottom orbital velocity, mean and peak wavelength, and mean
     %          and peak wave orbital excursion for buoy X01 (plot #1)
-    %          -  calculate the mean and peak bottom orbital velocities
+    %          - calculate the mean and peak orbital excursion
     %          - create a 3 panel time-series figure of the spectrogram,
-    %          wind speed, and tide data from NOAA for X01 (plot #2)
-    %          - create the same plot as plot #2 but instead it's datetime
+    %            wind speed, and tide data from NOAA for X01 (plot #2)
+    %          - create the same plot as plot #2 but instead its datetime
     %            limits are from June 27th to July 6th          
     
     

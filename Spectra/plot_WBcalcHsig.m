@@ -9,7 +9,7 @@
     %             height
     %           - create a table with the 6 average significant wave heights
     %           - create a plot comparing the calculated Hsigs versus the
-    %           given Hsigs for the China Rock buoys
+    %             given Hsigs for the China Rock buoys
  
     
     

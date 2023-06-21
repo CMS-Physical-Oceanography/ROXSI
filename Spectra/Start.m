@@ -852,6 +852,68 @@ end
     
 
 
+%% Determine the peak and mean time-weighted frequencies, bottom orbital velocities, and wavelengths for all buoys
+
+            
+% For Asilomar Buoys:
+for i = 1:3
+    for xx = 1:832
+        %Determining L from peak frequency/period:
+            [m,indPeakFreq] = max(XSee{i}(:,xx));
+            XTp{i}(xx) = 1/Xfreq{i}(indPeakFreq);
+            Xfp{i}(xx) = 1/XTp{i}(xx);
+            [XpWavelength{i}(xx),XpWaveNumber{i}(xx),XpCelerity{i}(xx)] = ...
+            function_wavecalculateSI(XTp{i}(xx),XGivenHsig{i}(xx),Xdepth{i}(xx));
+        %Determining L from energy weighted mean frequency/period:
+            m0 = trapz(Xfreq{i},XSee{i}(:,xx),1);
+            m1 = trapz(Xfreq{i},XSee{i}(:,xx).*Xfreq{1},1);
+            XTm{i}(xx) = m0/m1;
+            Xfm{i}(xx) = 1/XTm{i}(xx);
+            [XmWavelength{i}(xx),XmWaveNumber{i}(xx),XmCelerity{i}(xx)] = ...
+            function_wavecalculateSI(XTm{i}(xx),XGivenHsig{i}(xx),Xdepth{i}(xx));
+        %Determing peak bottom orbital velocity:
+            XpBOV{i}(xx) = (XGivenHsig{i}(xx)*pi)/(XTp{i}(xx)*...
+                sinh(XpWaveNumber{i}(xx)*Xdepth{i}(xx)));
+        %Determing mean bottom orbital velocity:
+            XmBOV{i}(xx) = (XGivenHsig{i}(xx)*pi)/(XTm{i}(xx)*...
+                sinh(XmWaveNumber{i}(xx)*Xdepth{i}(xx)));
+    end
+end
+
+
+
+% For China Rock Buoys:
+for i = 2:3
+    for xx = 1:832
+        %Determining L from peak frequency/period:
+            [m,indPeakFreq] = max(BSee{i}(:,xx));
+            BTp{i}(xx) = 1/Bfreq{i}(indPeakFreq);
+            Bfp{i}(xx) = 1/BTp{i}(xx);
+            [BpWavelength{i}(xx),BpWaveNumber{i}(xx),BpCelerity{i}(xx)] = ...
+            function_wavecalculateSI(BTp{i}(xx),BGivenHsig{i}(xx),Bdepth{i}(xx));
+        %Determining L from energy weighted mean frequency/period:
+            m0 = trapz(Bfreq{i},BSee{i}(:,xx),1);
+            m1 = trapz(Bfreq{i},BSee{i}(:,xx).*Bfreq{1},1);
+            BTm{i}(xx) = m0/m1;
+            Bfm{i}(xx) = 1/BTm{i}(xx);
+            [BmWavelength{i}(xx),BmWaveNumber{i}(xx),BmCelerity{i}(xx)] = ...
+            function_wavecalculateSI(BTm{i}(xx),BGivenHsig{i}(xx),Bdepth{i}(xx));
+        %Determing peak bottom orbital velocity:
+            BpBOV{i}(xx) = (BGivenHsig{i}(xx)*pi)/(BTp{i}(xx)*...
+                sinh(BpWaveNumber{i}(xx)*Bdepth{i}(xx)));
+        %Determing mean bottom orbital velocity:
+            BmBOV{i}(xx) = (BGivenHsig{i}(xx)*pi)/(BTm{i}(xx)*...
+                sinh(BmWaveNumber{i}(xx)*Bdepth{i}(xx)));
+    end
+end
+
+% - China Rock buoy B01 doesn't work for this method because there are only
+%    725 values for many of the variables (I'm not sure how to get trapz to 
+%    work for this)
+
+
+
+
 %% Save all figures, tables, and important variables
 % update this as more figures are made using Start.m
 
@@ -871,11 +933,15 @@ save('WBvariables.mat','Bdepth','BEMEM','Bfreq','BGivenHsig','Bt_Hsig',...
     'XEMEM','Xfreq','XGivenHsig','Xlat','Xlon','XSee','Xtime','XavgD',...
     'M_Hsig','ModelSee','mooringLat','mooringLon','mooringtable','NOAA',...
     'OffWindDir','OffWindSpd','OffWindTime','plotcolors','WindDir',...
-    'WindDT','WindSpd','NormalDirectionDifference','EXm','EXp','fm','fp',...
-    'Tm','Tp','Gfreq','Hsig','mBOV','pBOV','mCelerity','pCelerity',...
-    'mWavelength','pWavelength','ShoreP','Table_Hsig','XNormWaveDir',...
+    'WindDT','WindSpd','NormalDirectionDifference','EXm','EXp','Xfm','Xfp',...
+    'XTm','XTp','Gfreq','Hsig','XmBOV','XpBOV','XmCelerity','XpCelerity',...
+    'XmWavelength','XpWavelength','ShoreP','Table_Hsig','XNormWaveDir',...
     'ChinaLAT','ChinaLON','AsilomarLAT','AsilomarLON','Xmeanspec',...
-    'Xt_Hsig')
+    'Xt_Hsig','Bfm','Bfp','BTm','BTp','BmBOV','BpBOV','BmCelerity',...
+    'BpCelerity','BmWavelength','BpWavelength','BavgD')
+
+
+close all
 
 
 

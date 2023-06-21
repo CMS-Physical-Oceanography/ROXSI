@@ -9,7 +9,7 @@
     %            model using the integration method 
     %          - determining peak period, frequency, wavelength, celerity,
     %            and bottom orbital velocity
-    %          - determining energy-weighted mean period, frequency, 
+    %          - determining mean energy-weighted period, frequency, 
     %            wavelength, celerity, and bottom orbital velocity
     %            
  
