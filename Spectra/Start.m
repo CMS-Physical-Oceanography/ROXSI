@@ -52,9 +52,9 @@ clc;clear;
 
     % Add the path for the folder to read in data 
 %For CMS Computer:
-%addpath('C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)\Start Data')
+    addpath('C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)\Start Data')
 %For Personal Macbook:
-addpath('/Users/noahclark/CMS Internship/Start/Start Data')
+    %addpath('/Users/noahclark/CMS Internship/Start/Start Data')
 
     %China Rock (B) Spotters:
 Bspotters = {'roxsi_spotter_L2_B01_1150_reduced.mat' ...
@@ -494,11 +494,11 @@ end
 
     %Change the folder to save the animation figures to
 %For the CMS Computer:
-    %cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)\Start Figures\X01 Animation'
-    %addpath 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)'                    %DO I NEED THIS??
+    cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)\Start Figures\X01 Animation'
+    addpath 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)'                    %DO I NEED THIS??
 %For my personal MacBook:
-    cd '/Users/noahclark/CMS Internship/Start/Start Figures/X01 Animation'
-    addpath '/Users/noahclark/CMS Internship/Start'                           %DO I NEED THIS??
+    %cd '/Users/noahclark/CMS Internship/Start/Start Figures/X01 Animation'
+    %addpath '/Users/noahclark/CMS Internship/Start'                           %DO I NEED THIS??
 
 figure(20);clf
 set(gcf,'position',[1350,40,450,450])
@@ -928,9 +928,9 @@ end
 
     %Save figures in the "Start Figures" Folder
 %For the CMS Computer:
-    %cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)\Start Figures'
+    cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)\Start Figures'
 %For my Personal MacBook:
-    cd '/Users/noahclark/CMS Internship/Start/Start Figures'
+    %cd '/Users/noahclark/CMS Internship/Start/Start Figures'
 
 for i = 1:17
     saveas(figure(i),sprintf('Start.Fig%1d.jpeg',i))
@@ -939,9 +939,9 @@ end
 
     %Reassign the cd to "Start 5-16"
 %For the CMS Computer:
-    %cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)'
+    cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)'
 %For my personal MacBook:
-    cd '/Users/noahclark/CMS Internship/Start'
+    %cd '/Users/noahclark/CMS Internship/Start'
 
 
 %Save variables to WBvariables.mat
