@@ -225,7 +225,38 @@ B_TED{2} = BFluxDiff{2}./Bdelta_r{2};
 X_TED{1} = XFluxDiff{1}./Xdelta_r{1};
 X_TED{2} = XFluxDiff{2}./Xdelta_r{2};
 
+Gfreq = (1:129).*df;
+figure(1);clf;
+figure(2);clf;
 
+for i = 1:2
+    for j = 1:2
+        if i == 1
+            TED = B_TED;
+            figure(1);
+            if j == 1
+                Qtitle = 'Total Energy Dissipation between Buoys B01 and B03';
+            else
+                Qtitle = 'Total Energy Dissipation between Buoys B03 and B05';
+            end
+        else
+            TED = X_TED;
+            figure(2);
+            if j == 1
+                Qtitle = 'Total Energy Dissipation between Buoys X01 and X03';
+            else
+                Qtitle = 'Total Energy Dissipation between Buoys X03 and X04';
+            end
+        end
+        subplot(2,1,j)
+        plot(Gfreq,TED{j},plotcolors(j),'LineWidth',2)
+        grid on
+        title({[],Qtitle});
+        xlabel('Frequency (Hz)');ylabel('Total Energy Dissipation');
+        xlim([0 0.3])
+        hold on
+    end
+end
 
 
 %% Saving Variables
