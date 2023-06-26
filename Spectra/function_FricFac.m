@@ -81,8 +81,8 @@ switch Method
             f(j) = j*df;
             T(j) = 1/f(j);
             omega(j) = 2*pi*f(j);
-            %H(j) = 4*nansum(See(j,1:832))*df;    %times 4???
-            H(j) = 4*sqrt(var(See(j,:)));
+            H(j) = 4*sqrt(nansum(See(j,1:832))*df);    %times 4???
+            %H(j) = 4*sqrt(var(See(j,:)));
             a(j) = H(j)/2;
             [L,k(j),WDP,WS,RD,C] = function_wavecalculateSI(T(j),H(j),h);
             u_bj(j) = H(j)*pi*f(j)/(sinh(k(j)*h)); %eqn 22 Lowe
@@ -90,7 +90,7 @@ switch Method
 
         u_bjsq = u_bj.^2;
         %u_br = sqrt(sum(u_bjsq))
-        u_br = sqrt(sum(u_bjsq)/129)
+        u_br = sqrt(sum(u_bjsq))
         f_w = exp(a1.*(u_br./(kw*omegaf)).^a2 + a3);
         
         figure(200);clf;
