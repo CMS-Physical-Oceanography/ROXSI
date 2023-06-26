@@ -26,6 +26,7 @@
 %                spectrum curve
 % - Blat: a vector containing the latitudes for the 3 China Rock wave buoys
 % - Blon: a vector containing the longitudes for the 3 China Rock wave buoys
+% - Butm: the utm coordinate location of each of the China Rock wave buoys
 % - BSee: cell array containing the wave energies recorded by the China 
 %          Rock wave buoys organized based on wave frequency and time
 % - Bmeanspec: the time averaged spectrum for the China Rock buoys
@@ -33,7 +34,10 @@
 %           wave buoys
 % - BNormWaveDir: the incoming normal wave direction for China Rock's
 %                  shoreline
-
+% - B_TED: the total energy dissipation between each of the China Rock wave
+%          buoys at each frequency (Ex: B_TED{1} --> the total energy 
+%          dissipation between buoys B01 and B03) (positive value means
+%          that energy has been dissipated)
 
 
 %% Asilomar Variables:
@@ -51,6 +55,7 @@
 %                spectrum curve
 % - Xlat: a vector containing the latitudes for the 3 Asilomar wave buoys
 % - Xlon: a vector containing the longitudes for the 3 Asilomar wave buoys
+% - Xutm: the utm coordinate location of each of the Asilomar wave buoys
 % - XSee: cell array containing the wave energies recorded by the Asilomar 
 %          wave buoys organized based on wave frequency and time
 % - Xmeanspec: the time averaged spectrum for the China Rock buoys
@@ -59,6 +64,10 @@
 % - XavgD: the average depth measured by Asilomar's wave buoys
 % - XNormWaveDir: the incoming normal wave direction for Asilomar's
 %                  shoreline
+% - X_TED: the total energy dissipation between each of the Asilomar wave
+%          buoys at each frequency (Ex: X_TED{1} --> the total energy 
+%          dissipation between buoys X01 and X03) (positive value means
+%          that energy has been dissipated)
 
 
 %% Model Variables:

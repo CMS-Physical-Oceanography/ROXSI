@@ -278,23 +278,44 @@ BNormWaveDir = 270 + BShoreDir
 
 
 %% Comparing how far from normal the average directions are
+% 
+% B1MeanDir = mean(BEMEM{1},'all');
+% B1DirDiff = BNormWaveDir - B1MeanDir;
+% 
+% B2MeanDir = mean(BEMEM{2},'all');
+% B2DirDiff = BNormWaveDir - B2MeanDir;
+% 
+% B3MeanDir = mean(BEMEM{3},'all');
+% B3DirDiff = BNormWaveDir - B3MeanDir;
+% 
+% X1MeanDir = mean(XEMEM{1},'all');
+% X1DirDiff = XNormWaveDir - X1MeanDir;
+% 
+% X2MeanDir = nanmean(XEMEM{2},'all');
+% X2DirDiff = XNormWaveDir - X2MeanDir
+% 
+% X3MeanDir = mean(XEMEM{3},'all');
+% X3DirDiff = XNormWaveDir - X3MeanDir;
 
-B1MeanDir = mean(BEMEM{1},'all');
+    % Comparing how far from normal the average directions are:
+%B1MeanDir = mean(BEMEM{1},'all');
+B1MeanDir = 360 + meanangle(meanangle(BEMEM{1}));
 B1DirDiff = BNormWaveDir - B1MeanDir;
-
-B2MeanDir = mean(BEMEM{2},'all');
+%B2MeanDir = mean(BEMEM{2},'all');
+B2MeanDir = 360 + meanangle(meanangle(BEMEM{2}));
 B2DirDiff = BNormWaveDir - B2MeanDir;
-
-B3MeanDir = mean(BEMEM{3},'all');
+%B3MeanDir = mean(BEMEM{3},'all');
+B3MeanDir = 360 + meanangle(meanangle(BEMEM{3}));
 B3DirDiff = BNormWaveDir - B3MeanDir;
 
-X1MeanDir = mean(XEMEM{1},'all');
+%X1MeanDir = mean(XEMEM{1},'all');
+X1MeanDir = 360 + meanangle(meanangle(XEMEM{1}));
 X1DirDiff = XNormWaveDir - X1MeanDir;
-
-X2MeanDir = nanmean(XEMEM{2},'all');
-X2DirDiff = XNormWaveDir - X2MeanDir
-
-X3MeanDir = mean(XEMEM{3},'all');
+%X2MeanDir = nanmean(XEMEM{2},'all');
+X2MeanDir = 360 + meanangle(meanangle(XEMEM{2}));
+X2DirDiff = XNormWaveDir - X2MeanDir;
+%X3MeanDir = mean(XEMEM{3},'all');
+X3MeanDir = 360 + meanangle(meanangle(XEMEM{3}));
 X3DirDiff = XNormWaveDir - X3MeanDir;
 
 Location = ["China Rock";"Asilomar"];
@@ -955,7 +976,8 @@ save('WBvariables.mat','Bdepth','BEMEM','Bfreq','BGivenHsig','Bt_Hsig',...
     'XmWavelength','XpWavelength','ShoreP','Table_Hsig','XNormWaveDir',...
     'ChinaLAT','ChinaLON','AsilomarLAT','AsilomarLON','Xmeanspec',...
     'Xt_Hsig','Bfm','Bfp','BTm','BTp','BmBOV','BpBOV','BmCelerity',...
-    'BpCelerity','BmWavelength','BpWavelength','BavgD')
+    'BpCelerity','BmWavelength','BpWavelength','BavgD','B1MeanDir',...
+    'B2MeanDir','B3MeanDir','X1MeanDir','X2MeanDir','X3MeanDir')
 
 
 

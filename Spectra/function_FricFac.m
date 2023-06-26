@@ -73,20 +73,24 @@ switch Buoy
 end
 
     
-    % Select the method to use to calculate: 
+        % Select the method to use to calculate: 
+% Representative Bottom Orbital Velocity Method:
 switch Method
     case {'Representative','representative'}
         for j = 1:129
             f(j) = j*df;
             T(j) = 1/f(j);
             omega(j) = 2*pi*f(j);
-            H(j) = 4*nansum(See(j,1:832))*df;    %times 4???
+            %H(j) = 4*nansum(See(j,1:832))*df;    %times 4???
+            H(j) = 4*sqrt(var(See(j,:)));
             a(j) = H(j)/2;
             [L,k(j),WDP,WS,RD,C] = function_wavecalculateSI(T(j),H(j),h);
-            u_bj(j) = a(j)*omega(j)/(sinh(k(j)*h)); %eqn 22 Lowe
+            u_bj(j) = H(j)*pi*f(j)/(sinh(k(j)*h)); %eqn 22 Lowe
         end
+
         u_bjsq = u_bj.^2;
-        u_br = sqrt(sum(u_bjsq));
+        %u_br = sqrt(sum(u_bjsq))
+        u_br = sqrt(sum(u_bjsq)/129)
         f_w = exp(a1.*(u_br./(kw*omegaf)).^a2 + a3);
         
         figure(200);clf;
@@ -101,11 +105,12 @@ switch Method
             Af_w = exp(a1.*(u_br./(kw*A_omegaf)).^a2 + a3);
         end
 
+% Mean Bottom Orbital Velocity Method:
     case {'Mean','mean'}
         [L,k,WDP,WS,RD,C] = function_wavecalculateSI(Tm,Hs,h);
         fm = 1/Tm;
-        u_bTm = Hs/(sinh(h*k));
-        f_w = exp(a1.*(u_bTm./(kw*omegaf)).^a2 + a3);
+        u_bTm = Hs*pi*fm/(sinh(h*k))
+        f_w = exp(a1.*(u_bTm./(kw.*omegaf)).^a2 + a3);
         
         figure(200);clf;
         plot(ff,f_w)
@@ -118,12 +123,13 @@ switch Method
         if A_omegaf ~= 0
             Af_w = exp(a1.*(u_bTm./(kw*A_omegaf)).^a2 + a3);
         end
-        
+       
+% Peak Bottom Orbital Velocity Method:
     case {'Peak','peak'}
         [L,k,WDP,WS,RD,C] = function_wavecalculateSI(Tp,Hs,h);
         fp = 1/Tp;
-        u_bTp = Hs/(sinh(h*k));
-        f_w = exp(a1.*(u_bTp./(kw*omegaf)).^a2 + a3);
+        u_bTp = Hs*pi*fp/(sinh(h*k))
+        f_w = exp(a1.*(u_bTp./(kw.*omegaf)).^a2 + a3);
         
         figure(200);clf;
         plot(ff,f_w)
