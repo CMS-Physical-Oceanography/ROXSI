@@ -22,3 +22,4 @@
 * function_NormDir.m - calculates what incoming wave angle will be normal to the shore in Monterey Bay, California
 * function_wavecalculateSI.m - calculates the wavelength, wave number, and celerity 
 * function_FricFac.m - determines the friction factor based on a specified frequency, buoy, and method; and a plot is created of the frequency factor curve as a function of frequency; if 0 is entered as the input frequency, the returned plot will not have a specific frequency and/or friction factor marked
+* meanangle - calculates the mean of a set of angles (in degrees) based on polar considerations (Written by J.A. Dunne, 10/20/2005)
