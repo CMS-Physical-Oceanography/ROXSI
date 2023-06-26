@@ -16,6 +16,7 @@
 ### Calculations
 * NormDir.m - determine the incoming normal wave directions for the shoreline at China Rock and for the shoreline at Asilomar; also create a table comparing if the wave directions get closer to normal as the waves near the shore
 * pmBOV.m - determines the peak and mean time-weighted frequencies, periods, bottom orbital velocities, and wavelengths for all buoys at Asilomar and China Rock
+* TotalED.m - calculate the values used to determine the total energy dissipation and then calculate/estimate the total energy dissipation due to wave breaking and bottom friction
 
 ### Functions
 * function_NormDir.m - calculates what incoming wave angle will be normal to the shore in Monterey Bay, California
