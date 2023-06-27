@@ -67,7 +67,7 @@ for i = 1:length(Bspotters)
     Bfreq{i} = spotterL2.frequency;
     BSee{i} = spotterL2.See;
     BGivenHsig{i} = spotterL2.Hsig;
-    Bdepth{i} = -spotterL2.bottomdepth;
+    Bdepth{i} = -spotterL2.bottomdepth';
     BEMEM{i} = spotterL2.EMEM.meandir_f;
 end
 
@@ -75,6 +75,7 @@ BSee{2} = cat(2,BSee{2},BSee{1});   %Buoy 1 had to be taken out of water and put
 BGivenHsig{2} = cat(1,BGivenHsig{2},BGivenHsig{1});
 Btime{2} = cat(1,Btime{2},Btime{1});
 BEMEM{2} = cat(2,BEMEM{2},BEMEM{1});
+Bdepth{2} = cat(1,Bdepth{2},Bdepth{1});
 for i = 1:3     %shifting everything down (forget about {4} becuase it is now the same as {3})
     BSee{i} = BSee{i+1};
     Bfreq{i} = Bfreq{i+1};
@@ -208,6 +209,7 @@ Gfreq = (1:129).*0.01;
             ylabel(cb,'Wave Energy (m^2/Hz)')
             ylabel('Frequency (Hz)')
         end
+        
         %Asilomar Buoys:
         for i = 1:3
             figure(i + 3);clf;
@@ -515,7 +517,7 @@ end
 
     %Change the folder to save the animation figures to
 %For the CMS Computer:
-    cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)\Start Figures\X01 Animation'
+    cd 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)\Start Figures\X01 Spectrum Animation'
     addpath 'C:\Users\nsc4750\Documents\CMS Summer\Start (5-16)'                    %DO I NEED THIS??
 %For my personal MacBook:
     %cd '/Users/noahclark/CMS Internship/Start/Start Figures/X01 Animation'
@@ -979,6 +981,8 @@ save('WBvariables.mat','Bdepth','BEMEM','Bfreq','BGivenHsig','Bt_Hsig',...
     'BpCelerity','BmWavelength','BpWavelength','BavgD','B1MeanDir',...
     'B2MeanDir','B3MeanDir','X1MeanDir','X2MeanDir','X3MeanDir')
 
+
+close all
 
 
 
