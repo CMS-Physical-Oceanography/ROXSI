@@ -84,7 +84,7 @@ switch Method
             H(j) = 4*sqrt(nansum(See(j,1:832))*df);    %times 4???
             %H(j) = 4*sqrt(var(See(j,:)));
             a(j) = H(j)/2;
-            [L,k(j),WDP,WS,RD,C] = function_wavecalculateSI(T(j),H(j),h);
+            [k(j)] = function_KwavecalculateSI(T(j),h);
             u_bj(j) = H(j)*pi*f(j)/(sinh(k(j)*h)); %eqn 22 Lowe
         end
 
@@ -107,7 +107,7 @@ switch Method
 
 % Mean Bottom Orbital Velocity Method:
     case {'Mean','mean'}
-        [L,k,WDP,WS,RD,C] = function_wavecalculateSI(Tm,Hs,h);
+        [k] = function_KwavecalculateSI(Tm,h);
         fm = 1/Tm;
         u_bTm = Hs*pi*fm/(sinh(h*k))
         f_w = exp(a1.*(u_bTm./(kw.*omegaf)).^a2 + a3);
@@ -126,7 +126,7 @@ switch Method
        
 % Peak Bottom Orbital Velocity Method:
     case {'Peak','peak'}
-        [L,k,WDP,WS,RD,C] = function_wavecalculateSI(Tp,Hs,h);
+        [k] = function_KwavecalculateSI(Tp,h);
         fp = 1/Tp;
         u_bTp = Hs*pi*fp/(sinh(h*k))
         f_w = exp(a1.*(u_bTp./(kw.*omegaf)).^a2 + a3);

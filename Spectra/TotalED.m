@@ -43,7 +43,7 @@ for i = 1:3
         T = 1/f;
         omega = 2*pi*f;
 
-        H = 4*sqrt(var(BSee{i}(j,:)));
+       % H = 4*sqrt(nansum(BSee{i}(j,:))*df);
         a = H/2;
         BE{i}(j) = 0.5*rho*g*a^2;
         [L,k,WDP,WS,RD,C] = function_wavecalculateSI(T,H,h);
@@ -65,9 +65,9 @@ for i = 1:3
         T = 1/f;
         omega = 2*pi*f;
         if i == 2
-            H = 4*sqrt(var(XSee{i}(j,[1:172 174:end])));
+         %   H = 4*sqrt(nansum(XSee{i}(j,[1:172 174:end]))*df);
         else 
-            H = 4*sqrt(var(XSee{i}(j,:)));
+          %  H = 4*sqrt(nansum(XSee{i}(j,:))*df);
         end
         a = H/2;
         XE{i}(j) = 0.5*rho*g*a^2;
