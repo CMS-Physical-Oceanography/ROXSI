@@ -23,4 +23,4 @@
 * **function_wavecalculateSI.m** - calculates the wavelength, wave number, and celerity 
 * **function_FricFac.m** - Determines the friction factor (fw) at each time and at each frequency using Neilson’s [1992] method taken from “Spectral wave dissipation over a barrier reef”. A method must be selected which specifies which orbital velocity will be calculated.
 * **meanangle** - calculates the mean of a set of angles (in degrees) based on polar considerations (Written by J.A. Dunne, 10/20/2005)
-[testing this] 
+ 
