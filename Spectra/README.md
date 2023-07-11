@@ -1,7 +1,7 @@
 ## ROXSI Wave Spectra
 **Codes from Noah Clark to calculate wave characteristics based on wave buoy measurements**
 
-* Start.m - script with all code that I've completed through 6/19
+* <u>Start.m<u> - script with all code that I've completed through 6/19
 * Description_WBvariables.m - a description of every variable saved in the file WBvariables.m (found in Data Folder)
   
 ### Plotting
