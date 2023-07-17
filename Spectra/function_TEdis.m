@@ -1,5 +1,6 @@
 function[TED] = function_TEdis(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
-
+%[TED] = function_TEdis(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
+%
 %FUNCTION_TEdis determines the energy dissipation between two points 
 %                 (typically buoys) at each time and frequency
 %
@@ -120,15 +121,19 @@ Length_NorthVec = 1;
 dir_V = acosd(dot(NorthVec,V)/(Length_NorthVec*Length_V));
 
 % Calculate delta_r
-WaveDir = zeros(loop(1),loop(2));
-Theta = zeros(loop(1),loop(2));
-for j = 1:loop(1)
-    for i = 1:loop(2)
-        Angles = [Direc{1}(j,i)-180,Direc{2}(j,i)-180];
-        WaveDir(j,i) = atand(sum(sind(Angles))/sum(cosd(Angles)));
-        Theta(j,i) = WaveDir(j,i) - dir_V + 360;
-    end
-end
+WaveDir = zeros(loop(2));
+% Theta = zeros(loop(1),loop(2));
+% for j = 1:loop(1)
+%     for i = 1:loop(2)
+%         Angles = [Direc{1}(i)-180,Direc{2}(i)-180];
+%         WaveDir(i) = atand(sum(sind(Angles))/sum(cosd(Angles)));
+%         Theta(i) = WaveDir(j,i) - dir_V;
+%     end
+% end
+WaveDir = nansum(Direc1.*See1)./nansum(See1);
+Theta = WaveDir - dir_V;
+
+
 
 delta_r = Length_V.*cos(Theta);
 
@@ -143,18 +148,18 @@ TED = FluxDiff./delta_r;
         % - Medium Energy @ time 189
         % - Large energy @ time 73
         
-Gfreq = (1:129).*0.0098;
-figure(1);clf;
-plot(Gfreq,TED(:,263),'g','LineWidth',2)
-hold on
-plot(Gfreq,TED(:,189),'b','LineWidth',2)
-plot(Gfreq,TED(:,73),'r','LineWidth',2)
-xlabel('Frequency (Hz)');ylabel('Energy Dissipation');
-legend('Low Energy Time','Medium Energy Time',...
-    'High Energy Time','location','northeast')
-title('Total Energy Dissipation')
-grid on
-xlim([0 0.3])
+% Gfreq = (1:129).*0.0098;
+% figure(1);clf;
+% plot(Gfreq,TED(:,263),'g','LineWidth',2)
+% hold on
+% plot(Gfreq,TED(:,189),'b','LineWidth',2)
+% plot(Gfreq,TED(:,73),'r','LineWidth',2)
+% xlabel('Frequency (Hz)');ylabel('Energy Dissipation');
+% legend('Low Energy Time','Medium Energy Time',...
+%     'High Energy Time','location','northeast')
+% title('Total Energy Dissipation')
+% grid on
+% xlim([0 0.3])
 
 
 

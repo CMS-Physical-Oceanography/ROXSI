@@ -124,7 +124,7 @@ switch Method
             end
             k = (2*pi)/Lnew;
             %kp(i) = function_KwavecalculateSI(Tp(i),h(i));
-            u_bTp(i) = Hs(i)/(sinh(h(i)*k(i))*fp(i));
+            u_bTp(i) = (Hs(i)/2)*2*pi/(sinh(h(i)*k(i))*Tp);
 
             for j = 1:loop(1)
                 fw(j,i) = exp(a1.*(u_bTp(i)./(kw.*omegaf(j))).^a2 + a3);
@@ -173,7 +173,7 @@ switch Method
             end
             k = (2*pi)/Lnew;
             %km(i) = function_KwavecalculateSI(Tm(i),h(i));
-            u_bTm(i) = Hs(i)/(sinh(h(i)*k)*fm(i));
+            u_bTm(i) = ((Hs(i)/2)*2*pi)/(sinh(h(i)*k)*Tm);
 
             for j = 1:loop(1)
                 fw(j,i) = exp(a1.*(u_bTm(i)./(kw.*omegaf(j))).^a2 + a3);

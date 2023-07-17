@@ -1,5 +1,5 @@
 %% ObsFricFac.m
-
+% comment
 % Noah Clark 7/13/2023
 % Purpose: Calculate the observed friction factor (fw_o)
 
@@ -11,12 +11,12 @@
 %% Example Inputs
 clc;clear;
 load('WBvariables.mat');
-See = XSee{1};
-h = Xdepth{1}; %may only need to input the time averaged depth
-kw = 0.16; a1 = 5.5; a2 = -0.2; a3 = -6.3; ff = (1:129).*0.0098;
+See = XSee{1}(1:51,1:832);
+h = Xdepth{1}(1:832); %may only need to input the time averaged depth
+kw = 0.16; a1 = 5.5; a2 = -0.2; a3 = -6.3; ff = (1:51).*0.0098;
 [fw,u_br,u_b] = function_FricFac(See,ff,h,kw,a1,a2,a3,'r');
-TED = function_TEdis(XSee{1},XSee{2},XEMEM{1},XEMEM{2},ff,Xutm{1},...
-    Xutm{2},Xdepth{1},Xdepth{2});
+TED = function_TEdis(XSee{1}(1:51,189),XSee{2}(1:51,189),XEMEM{1}(1:51,189),XEMEM{2}(1:51,189),ff(1:51),Xutm{1},...
+    Xutm{2},Xdepth{1}(189),Xdepth{2}(189));
 
 
 %% Preliminaries
