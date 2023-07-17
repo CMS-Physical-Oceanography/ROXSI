@@ -1,4 +1,4 @@
-function[TED] = function_TEdis(See1,See2,EMEM1,EMEM2,ff,utm1,utm2,h1,h2)
+function[TED] = function_TEdis(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
 
 %FUNCTION_TEdis determines the energy dissipation between two points 
 %                 (typically buoys) at each time and frequency
@@ -10,7 +10,7 @@ function[TED] = function_TEdis(See1,See2,EMEM1,EMEM2,ff,utm1,utm2,h1,h2)
 %                    time and frequency for Point #2
 %           - EMEM1: cell array containing the wave directions organized by
 %                     time and frequency for Point #1
-%           - EMEM2:cell array containing the wave directions organized by
+%           - EMEM2: cell array containing the wave directions organized by
 %                     time and frequency for Point #2
 %           - ff: a vector of frequencies which See is organized by
 %           - utm1: the utm coordinates ([x y]) of the location of Point #1
@@ -23,8 +23,7 @@ function[TED] = function_TEdis(See1,See2,EMEM1,EMEM2,ff,utm1,utm2,h1,h2)
 %                   frequency between the two points
 %
 %
-% DO I NEED TO DO ANYTHING WITH ABSOLUTE VALUES SO THAT IT ISN'T NEGATIVE
-% WHEN POINT 1 IS OPPOSITE OF MY POINT 1
+
 
 %% Preliminaries (only for now)
 %clc;clear;
@@ -45,19 +44,18 @@ function[TED] = function_TEdis(See1,See2,EMEM1,EMEM2,ff,utm1,utm2,h1,h2)
 % h{2} = Xdepth{2};
 
 
-%% Preliminaries (REAL)
+%% Preliminaries
 
 See{1} = See1;   %arrays must all be the same size
 See{2} = See2;
-EMEM{1} = EMEM1;
-EMEM{2} = EMEM2;
+Direc{1} = Direc1;
+Direc{2} = Direc2;
 
 utm{1} = utm1;
 utm{2} = utm2;
 
 h{1} = h1;
 h{2} = h2;
-
 
 df = ff(2) - ff(1);
 T = 1./ff; %s
@@ -126,7 +124,7 @@ WaveDir = zeros(loop(1),loop(2));
 Theta = zeros(loop(1),loop(2));
 for j = 1:loop(1)
     for i = 1:loop(2)
-        Angles = [EMEM{1}(j,i)-180,EMEM{2}(j,i)-180];
+        Angles = [Direc{1}(j,i)-180,Direc{2}(j,i)-180];
         WaveDir(j,i) = atand(sum(sind(Angles))/sum(cosd(Angles)));
         Theta(j,i) = WaveDir(j,i) - dir_V + 360;
     end

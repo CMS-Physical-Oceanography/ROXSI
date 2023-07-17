@@ -1,4 +1,4 @@
-function[fw] = function_FricFac(See,ff,h,kw,a1,a2,a3,Method)
+function[fw,u_br,u_b] = function_FricFac(See,ff,h,kw,a1,a2,a3,Method)
 %
 %FUNCTION_FRICFAC determines the friction factor at each time and at each
 % frequency using Neilson's [1992] method taken from "Spectral wave
@@ -23,9 +23,10 @@ function[fw] = function_FricFac(See,ff,h,kw,a1,a2,a3,Method)
 % 
 % Outputs:
 %       - fw: the friction factor at each time and at each given frequency
+%       - u_br: the representative bottom orbital velocity
 % 
 %
-% Created By: Noah Clark       Last Updated: 7/11/2023
+% Created By: Noah Clark       Last Updated: 7/13/2023
 % 
 %
 % Still TO-DO:
@@ -36,7 +37,7 @@ function[fw] = function_FricFac(See,ff,h,kw,a1,a2,a3,Method)
 %% Preliminaries
 loop = size(See);
 df = ff(2) - ff(1);
-omegaf = 2*pi*ff;
+omegaf = 2.*pi.*ff;
 
 H = 4.*sqrt(See.*df); 
 T = 1./ff;
@@ -63,33 +64,35 @@ switch Method
                     delta = abs(Lnew - Lprev);
                 end
                 k = (2*pi)/Lnew;
-                
-                %k(j,i) = function_KwavecalculateSI(T(j),h(i));  %HAVE A DIFFERENT WAY SO USERS DON'T HAVE TO DOWNLOAD TWO FUNCTIONS
-                u_b(j,i) = H(j,i)./(sinh(h(i).*k).*ff(j));   
+         
+                %u_b(j,i) = H(j,i)./(sinh(h(i).*k)*ff(j));  
+                u_b(j,i) = (H(j,i)/2)*omegaf(j)/sinh(k*h(i));
             end
         end
 
         u_bsqr = u_b.^2;
         
         fw = zeros(loop(1),loop(2));
+        u_br = zeros(1,loop(2));
         for i = 1:loop(2)
-            u_br = sqrt(sum(u_bsqr(:,i)));
+            u_br(i) = sqrt(sum(u_bsqr(:,i)));
 
             for j = 1:loop(1)
-                fw(j,i) = exp(a1.*(u_br./(kw.*omegaf(j))).^a2 + a3);      
+                fw(j,i) = exp(a1.*(u_br(i)./(kw.*omegaf(j))).^a2 + a3);      
             end
         end
-
+        
 
         %       Example Plot (for representative method):
         % - Small energy @ time 263
         % - Medium Energy @ time 189
         % - Large energy @ time 73
         figure;clf;
-        plot(ff,fw(:,263),'g','LineWidth',2)
+        plot(ff,mean(fw,2))
+       % plot(ff,fw(:,263),'g','LineWidth',2)
         hold on
-        plot(ff,fw(:,189),'b','LineWidth',2)
-        plot(ff,fw(:,73),'r','LineWidth',2)
+        %plot(ff,fw(:,189),'b','LineWidth',2)
+        %plot(ff,fw(:,73),'r','LineWidth',2)
         xlabel('Frequency (Hz)');ylabel('Friction Factor (fw)');
         legend('Low Energy Time','Medium Energy Time',...
             'High Energy Time','location','northwest')
@@ -110,6 +113,7 @@ switch Method
         end
         
         fw = zeros(loop(1),loop(2));
+        u_bTp = zeros(1,loop(2));
         for i = 1:loop(2)
                 % Solving linear dispersion relationship:
             Lprev = 1; Lnew = 0; thresh = 0.01; delta = 1;
@@ -120,19 +124,22 @@ switch Method
             end
             k = (2*pi)/Lnew;
             %kp(i) = function_KwavecalculateSI(Tp(i),h(i));
-            u_bTp = Hs(i)/(sinh(h(i)*k(i))*fp(i));
+            u_bTp(i) = Hs(i)/(sinh(h(i)*k(i))*fp(i));
 
             for j = 1:loop(1)
-                fw(j,i) = exp(a1.*(u_bTp./(kw.*omegaf(j))).^a2 + a3);
+                fw(j,i) = exp(a1.*(u_bTp(i)./(kw.*omegaf(j))).^a2 + a3);
             end
         end
+        
+        u_br = u_bTp;
 
         %   Example Plot (for peak method):
         figure;clf;
-        plot(ff,fw(:,263),'g','LineWidth',2)
-        hold on
-        plot(ff,fw(:,189),'b','LineWidth',2)
-        plot(ff,fw(:,73),'r','LineWidth',2)
+        plot(ff,mean(fw,2))
+        %plot(ff,fw(:,263),'g','LineWidth',2)
+        %hold on
+%         plot(ff,fw(:,189),'b','LineWidth',2)
+%         plot(ff,fw(:,73),'r','LineWidth',2)
         xlabel('Frequency (Hz)');ylabel('Friction Factor (fw)');
         legend('Low Energy Time','Medium Energy Time',...
             'High Energy Time','location','northwest')
@@ -154,32 +161,34 @@ switch Method
             fm(i) = 1/Tm(i);
         end
         
-        km = zeros(1,loop(2));
-        u_bTm = zeros(1,loop(2));
         fw = zeros(loop(1),loop(2));
+        u_bTm = zeros(1,loop(2));
         for i = 1:loop(2)
                 % Solving linear dispersion relationship:
             Lprev = 1; Lnew = 0; thresh = 0.01; delta = 1;
             while delta > thresh
                 Lprev = Lnew;
-                Lnew = (9.81*T(i)^2)/(2*pi)*tanh((2*pi*h(i))/Lprev);
+                Lnew = (9.81*Tm(i)^2)/(2*pi)*tanh((2*pi*h(i))/Lprev);
                 delta = abs(Lnew - Lprev);
             end
             k = (2*pi)/Lnew;
             %km(i) = function_KwavecalculateSI(Tm(i),h(i));
-            u_bTm = Hs(i)/(sinh(h(i)*k)*fm(i));
+            u_bTm(i) = Hs(i)/(sinh(h(i)*k)*fm(i));
 
             for j = 1:loop(1)
-                fw(j,i) = exp(a1.*(u_bTm./(kw.*omegaf(j))).^a2 + a3);
+                fw(j,i) = exp(a1.*(u_bTm(i)./(kw.*omegaf(j))).^a2 + a3);
             end
         end
+        
+        u_br = u_bTm;
 
         %   Example Plot (for mean method):
         figure;clf;
-        plot(ff,fw(:,263),'g','LineWidth',2)
-        hold on
-        plot(ff,fw(:,189),'b','LineWidth',2)
-        plot(ff,fw(:,73),'r','LineWidth',2)
+        plot(ff,mean(fw,2))
+%         plot(ff,fw(:,263),'g','LineWidth',2)
+%         hold on
+%         plot(ff,fw(:,189),'b','LineWidth',2)
+%         plot(ff,fw(:,73),'r','LineWidth',2)
         xlabel('Frequency (Hz)');ylabel('Friction Factor (fw)');
         legend('Low Energy Time','Medium Energy Time',...
             'High Energy Time','location','northwest')
