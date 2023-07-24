@@ -1,4 +1,4 @@
-function[fw,u_br,u_b] = function_FricFac(See,ff,h,kw,a1,a2,a3,Method)
+function[fw,u_br,TED_N] = function_FricFac(See,ff,h,kw,a1,a2,a3,Method)
 %
 %FUNCTION_FRICFAC determines the friction factor at each time and at each
 % frequency using Neilson's [1992] method taken from "Spectral wave
@@ -24,20 +24,19 @@ function[fw,u_br,u_b] = function_FricFac(See,ff,h,kw,a1,a2,a3,Method)
 % Outputs:
 %       - fw: the friction factor at each time and at each given frequency
 %       - u_br: the representative bottom orbital velocity
+%       - TED_N: the energy dissipation(theoretical) using the Neilson
+%                 friction factors
+%
+% Created By: Noah Clark       Last Updated: 7/24/2023
 % 
 %
-% Created By: Noah Clark       Last Updated: 7/13/2023
-% 
-%
-% Still TO-DO:
-%               - better comments?
-%               - define variables?
-%
+
 
 %% Preliminaries
 loop = size(See);
 df = ff(2) - ff(1);
 omegaf = 2.*pi.*ff;
+rho = 1025;
 
 H = 4.*sqrt(See.*df); 
 T = 1./ff;
@@ -46,6 +45,7 @@ Hs = zeros(1,loop(2));
 for i = 1:loop(2)
     Hs(i) = 4.*sqrt(sum(See(:,i)).*df);
 end   
+
 
 switch Method
     
@@ -83,23 +83,6 @@ switch Method
         end
         
 
-        %       Example Plot (for representative method):
-        % - Small energy @ time 263
-        % - Medium Energy @ time 189
-        % - Large energy @ time 73
-        figure;clf;
-        plot(ff,mean(fw,2))
-       % plot(ff,fw(:,263),'g','LineWidth',2)
-        hold on
-        %plot(ff,fw(:,189),'b','LineWidth',2)
-        %plot(ff,fw(:,73),'r','LineWidth',2)
-        xlabel('Frequency (Hz)');ylabel('Friction Factor (fw)');
-        legend('Low Energy Time','Medium Energy Time',...
-            'High Energy Time','location','northwest')
-        title('Representative Orbital Velocity Method')
-        grid on
-
-
 
 %% Peak Bottom Orbital Velocity Method
 
@@ -133,18 +116,7 @@ switch Method
         
         u_br = u_bTp;
 
-        %   Example Plot (for peak method):
-        figure;clf;
-        plot(ff,mean(fw,2))
-        %plot(ff,fw(:,263),'g','LineWidth',2)
-        %hold on
-%         plot(ff,fw(:,189),'b','LineWidth',2)
-%         plot(ff,fw(:,73),'r','LineWidth',2)
-        xlabel('Frequency (Hz)');ylabel('Friction Factor (fw)');
-        legend('Low Energy Time','Medium Energy Time',...
-            'High Energy Time','location','northwest')
-        title('Peak Orbital Velocity Method')
-        grid on
+
 
 
 
@@ -182,20 +154,46 @@ switch Method
         
         u_br = u_bTm;
 
-        %   Example Plot (for mean method):
-        figure;clf;
-        plot(ff,mean(fw,2))
-%         plot(ff,fw(:,263),'g','LineWidth',2)
-%         hold on
-%         plot(ff,fw(:,189),'b','LineWidth',2)
-%         plot(ff,fw(:,73),'r','LineWidth',2)
-        xlabel('Frequency (Hz)');ylabel('Friction Factor (fw)');
-        legend('Low Energy Time','Medium Energy Time',...
-            'High Energy Time','location','northwest')
-        title('Energy-Weighted Mean Orbital Velocity Method')
-        grid on
 
 end
+
+
+%% Calculating TED_N
+% Calculate the theoretical energy dissipation using the calculated
+% friction factors
+% Note: Urms is what is origionally used in the final equation but
+%        instead we use u_br
+
+% u_b = zeros(loop(1),loop(2));
+% for j = 1:loop(1)
+%     for i = 1:loop(2)
+%         % Solving linear dispersion relationship:
+%         Lprev = 1; Lnew = 0; thresh = 0.01; delta = 1;
+%         while delta > thresh
+%             Lprev = Lnew;
+%             Lnew = (9.81*T(j)^2)/(2*pi)*tanh((2*pi*h(i))/Lprev);
+%             delta = abs(Lnew - Lprev);
+%         end
+%         k = (2*pi)/Lnew;
+%         
+%         u_b(j,i) = (H(j,i)/2)*omegaf(j)/sinh(k*h(i));
+%     end
+% end
+
+%u_bsqr = u_b.^2;
+
+%u_rms = zeros(1,loop(2));  Urms is what is origionally used in the final
+%                           equation but instead we use u_br
+
+TED_N = zeros(loop(1),loop(2));
+for i = 1:loop(2)
+   % u_rms(i) = sqrt((1/loop(1)).*sum(u_bsqr(:,i)));
+    for j = 1:loop(1)
+        TED_N(j,i) = 0.6.*rho.*fw(j,i).*u_br(i).^3;
+    end
+end
+
+
 
 
 end

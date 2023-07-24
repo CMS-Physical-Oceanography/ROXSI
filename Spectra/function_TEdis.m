@@ -5,13 +5,13 @@ function[TED] = function_TEdis(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
 %                 (typically buoys) at each time and frequency
 %
 % Inputs:
-%           - See1: cell array containing the wave energies organized by 
+%           - See1: array containing the wave energies organized by 
 %                    time and frequency for Point #1
-%           - See2: cell array containing the wave energies organized by 
+%           - See2: array containing the wave energies organized by 
 %                    time and frequency for Point #2
-%           - EMEM1: cell array containing the wave directions organized by
+%           - Direc1: array containing the wave directions organized by
 %                     time and frequency for Point #1
-%           - EMEM2: cell array containing the wave directions organized by
+%           - Direc2: array containing the wave directions organized by
 %                     time and frequency for Point #2
 %           - ff: a vector of frequencies which See is organized by
 %           - utm1: the utm coordinates ([x y]) of the location of Point #1
@@ -48,7 +48,7 @@ function[TED] = function_TEdis(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
 %% Preliminaries
 
 See{1} = See1;   %arrays must all be the same size
-See{2} = See2;
+See{2} = See2;  
 Direc{1} = Direc1;
 Direc{2} = Direc2;
 
@@ -103,8 +103,9 @@ for xx = 1:2
 end
 
 FluxDiff = Flux{1} - Flux{2};
-
-
+%FluxDiff = nanmean(FluxDiff)
+%instead of averaging See at the beginning, maybe could average at this
+%step
 
 %% Determine delta_r
 % delta_r = L*cos(theta)
@@ -121,7 +122,7 @@ Length_NorthVec = 1;
 dir_V = acosd(dot(NorthVec,V)/(Length_NorthVec*Length_V));
 
 % Calculate delta_r
-WaveDir = zeros(loop(2));
+WaveDir = zeros(1,loop(2));
 % Theta = zeros(loop(1),loop(2));
 % for j = 1:loop(1)
 %     for i = 1:loop(2)
@@ -130,13 +131,28 @@ WaveDir = zeros(loop(2));
 %         Theta(i) = WaveDir(j,i) - dir_V;
 %     end
 % end
-WaveDir = nansum(Direc1.*See1)./nansum(See1);
-Theta = WaveDir - dir_V;
+Theta = zeros(1,loop(2));
+for i = 1:loop(2)
+    WaveDir1 = nansum(Direc{1}(1:51,i).*See{1}(:,i))./nansum(See{1}(:,i)) + 180; %DOES THIS WORK FOR ANGLES?
+    WaveDir2 = nansum(Direc{2}(1:51,i).*See{2}(:,i))./nansum(See{2}(:,i)) + 180;
+    %WaveDir1 = nansum(atand(nansum(sind(Direc{1}(1:51,i)))...
+      %  /nansum(cosd(Direc{1}(1:51,i)))).*See{1}(:,i))./nansum(See{1}(:,i));
+    %WaveDir2 = nansum(atand(nansum(sind(Direc{2}(1:51,i)))...
+      %  /nansum(cosd(Direc{2}(1:51,i)))).*See{2}(:,i))./nansum(See{2}(:,i));
+      
+    Angles = [WaveDir1, WaveDir2];
+   %WaveDir(i) = atand(sum(sind(Angles))/sum(cosd(Angles))); this
+   %                                                        apperently doesn't work
+    WaveDir(i) = meanangle(Angles);
+    %atand(nansum(sind(Direc{1}(1:51,i)))/nansum(cosd(Direc{1}(1:51,i))))
+    Theta(i) = WaveDir - dir_V;
+end
+%AVGWaveDir = meanangle(WaveDir);
+%Theta = AVGWaveDir - dir_V;
 
 
 
-delta_r = Length_V.*cos(Theta);
-
+delta_r = Length_V.*cosd(Theta);
 % Solve for Total Energy Dissipation
 TED = FluxDiff./delta_r;
 
