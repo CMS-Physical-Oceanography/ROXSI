@@ -1,8 +1,8 @@
-function[TED] = function_TEdis(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
-%[TED] = function_TEdis(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
+function[TED,GeoAngle,EWMAngle,Theta] = function_TEdis(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
 %
 %FUNCTION_TEdis determines the energy dissipation between two points 
 %                 (typically buoys) at each time and frequency
+%
 %
 % Inputs:
 %           - See1: array containing the wave energies organized by 
@@ -10,9 +10,9 @@ function[TED] = function_TEdis(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
 %           - See2: array containing the wave energies organized by 
 %                    time and frequency for Point #2
 %           - Direc1: array containing the wave directions organized by
-%                     time and frequency for Point #1
+%                      time and frequency for Point #1
 %           - Direc2: array containing the wave directions organized by
-%                     time and frequency for Point #2
+%                      time and frequency for Point #2
 %           - ff: a vector of frequencies which See is organized by
 %           - utm1: the utm coordinates ([x y]) of the location of Point #1
 %           - utm2: the utm coordinates ([x y]) of the location of Point #2
@@ -22,27 +22,14 @@ function[TED] = function_TEdis(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
 % Outputs: 
 %           - TED: the total amount of energy dissipated at each time and 
 %                   frequency between the two points
+%           - GeoAngle: The angle made by connecting a line through the
+%                        two points (reference North)
+%           - EWMAngle: The energy weighted mean wave angle at each time
+%           - Theta: the angle formed between the line connecting the two
+%                     points and the wave propagation direction
 %
-%
-
-
-%% Preliminaries (only for now)
-%clc;clear;
-%load('WBvariables.mat')
-%% Manual Inputs
-%Also must add the wave directions (EMEM)
-%ff = (1:129).*0.0098;
-
-% See{1} = XSee{1};   %arrays must all be the same size
-% See{2} = XSee{2};
-% EMEM{1} = XEMEM{1};
-% EMEM{2} = XEMEM{2};
+% Created By: Noah Clark       Uploaded: 7/27/2023
 % 
-% utm{1} = Xutm{1};
-% utm{2} = Xutm{2};
-% 
-% h{1} = Xdepth{1};
-% h{2} = Xdepth{2};
 
 
 %% Preliminaries
@@ -61,10 +48,10 @@ h{2} = h2;
 df = ff(2) - ff(1);
 T = 1./ff; %s
 omega = 2.*pi.*ff;
-rho = 1025; %kg/m^3     %density of sea water (assumption)
+rho = 1025; %kg/m^3    
 g = 9.81; %m/s^2
 
-loop = size(See{1}); %doesn't matter which See is used here (bc they're same size)
+loop = size(See{1}); 
 
 H = {[],[]};
 H{1} = 4.*sqrt(See{1}.*df);
@@ -103,12 +90,10 @@ for xx = 1:2
 end
 
 FluxDiff = Flux{1} - Flux{2};
-%FluxDiff = nanmean(FluxDiff)
-%instead of averaging See at the beginning, maybe could average at this
-%step
+
 
 %% Determine delta_r
-% delta_r = L*cos(theta)
+
 
 % Find the direction from one buoy to the next (relative to North)
 Vx = utm{2}(1) - utm{1}(1);
@@ -120,65 +105,37 @@ NorthVec = [0 1];
 Length_NorthVec = 1;
 
 dir_V = acosd(dot(NorthVec,V)/(Length_NorthVec*Length_V));
+GeoAngle = dir_V;
 
-% Calculate delta_r
 WaveDir = zeros(1,loop(2));
-% Theta = zeros(loop(1),loop(2));
-% for j = 1:loop(1)
-%     for i = 1:loop(2)
-%         Angles = [Direc{1}(i)-180,Direc{2}(i)-180];
-%         WaveDir(i) = atand(sum(sind(Angles))/sum(cosd(Angles)));
-%         Theta(i) = WaveDir(j,i) - dir_V;
-%     end
-% end
 Theta = zeros(1,loop(2));
 for i = 1:loop(2)
-    WaveDir1 = nansum(Direc{1}(1:51,i).*See{1}(:,i))./nansum(See{1}(:,i)) + 180; %DOES THIS WORK FOR ANGLES?
-    WaveDir2 = nansum(Direc{2}(1:51,i).*See{2}(:,i))./nansum(See{2}(:,i)) + 180;
-    %WaveDir1 = nansum(atand(nansum(sind(Direc{1}(1:51,i)))...
-      %  /nansum(cosd(Direc{1}(1:51,i)))).*See{1}(:,i))./nansum(See{1}(:,i));
-    %WaveDir2 = nansum(atand(nansum(sind(Direc{2}(1:51,i)))...
-      %  /nansum(cosd(Direc{2}(1:51,i)))).*See{2}(:,i))./nansum(See{2}(:,i));
-      
+        % Determine energy weighted mean wave direction
+    xm1 = nansum(sind(Direc{1}(:,i)).*See{1}(:,i))/nansum(See{1}(:,i));
+    ym1 = nansum(cosd(Direc{1}(:,i)).*See{1}(:,i))/nansum(See{1}(:,i));
+    WaveDir1 = -1*(atan2d(ym1,xm1) - 90) + 180;
+
+    xm2 = nansum(sind(Direc{2}(:,i)).*See{2}(:,i))/nansum(See{2}(:,i));
+    ym2 = nansum(cosd(Direc{2}(:,i)).*See{2}(:,i))/nansum(See{2}(:,i));
+    WaveDir2 = -1*(atan2d(ym2,xm2) - 90) + 180;
+
     Angles = [WaveDir1, WaveDir2];
-   %WaveDir(i) = atand(sum(sind(Angles))/sum(cosd(Angles))); this
-   %                                                        apperently doesn't work
+
     WaveDir(i) = meanangle(Angles);
-    %atand(nansum(sind(Direc{1}(1:51,i)))/nansum(cosd(Direc{1}(1:51,i))))
     Theta(i) = WaveDir - dir_V;
 end
-%AVGWaveDir = meanangle(WaveDir);
-%Theta = AVGWaveDir - dir_V;
-
-
-
+EWMAngle = WaveDir;
 delta_r = Length_V.*cosd(Theta);
+
 % Solve for Total Energy Dissipation
 TED = FluxDiff./delta_r;
 
 
-
-%% Plotting (will not be in final function)
-
-        % - Small energy @ time 263
-        % - Medium Energy @ time 189
-        % - Large energy @ time 73
-        
-% Gfreq = (1:129).*0.0098;
-% figure(1);clf;
-% plot(Gfreq,TED(:,263),'g','LineWidth',2)
-% hold on
-% plot(Gfreq,TED(:,189),'b','LineWidth',2)
-% plot(Gfreq,TED(:,73),'r','LineWidth',2)
-% xlabel('Frequency (Hz)');ylabel('Energy Dissipation');
-% legend('Low Energy Time','Medium Energy Time',...
-%     'High Energy Time','location','northeast')
-% title('Total Energy Dissipation')
-% grid on
-% xlim([0 0.3])
-
-
-
 end
+
+
+
+
+
 
 

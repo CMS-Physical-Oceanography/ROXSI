@@ -1,9 +1,15 @@
-function[fw,u_br,TED_N] = function_FricFac(See,ff,h,kw,a1,a2,a3,Method)
+function[fw,u_br,fe,TED_fe] = function_FricFac(See,ff,h,kw,a1,a2,a3,Method)
 %
-%FUNCTION_FRICFAC determines the friction factor at each time and at each
-% frequency using Neilson's [1992] method taken from "Spectral wave
-% dissipation over a barrier reef". A method must be selected which
-% specifies which orbital velocity will be calculated.
+%FUNCTION_FRICFAC determines the theoretical energy dissipations at each 
+% time and at each frequency by using the energy dissipation factors from 
+% Neilson's [1992] method from "Spectral wave dissipation over a barrier 
+% reef". 
+%
+%
+% Details:
+%       - A method(R,M,or P) must be selected which specifies which 
+%          orbital velocity will be used to calculate the friction factor
+%       - the sizes of the inputs must match
 % 
 % Inputs:
 %       - See: S eta eta matrix
@@ -22,17 +28,18 @@ function[fw,u_br,TED_N] = function_FricFac(See,ff,h,kw,a1,a2,a3,Method)
 %                       - "P"/"p": peak bottom orbital velocity method
 % 
 % Outputs:
-%       - fw: the friction factor at each time and at each given frequency
+%       - fw: the Neilson friction factors
 %       - u_br: the representative bottom orbital velocity
-%       - TED_N: the energy dissipation(theoretical) using the Neilson
-%                 friction factors
+%       - fe: Neilson energy dissipation factors
+%       - TED_fe: the energy dissipation(theoretical) using the Neilson
+%                  energy dissipation factors
 %
-% Created By: Noah Clark       Last Updated: 7/24/2023
+% Created By: Noah Clark       Uploaded: 7/27/2023
 % 
-%
 
 
 %% Preliminaries
+
 loop = size(See);
 df = ff(2) - ff(1);
 omegaf = 2.*pi.*ff;
@@ -46,31 +53,33 @@ for i = 1:loop(2)
     Hs(i) = 4.*sqrt(sum(See(:,i)).*df);
 end   
 
+    % Bottom Orbital Velocities:
+u_b = zeros(loop(1),loop(2));
+for j = 1:loop(1)
+    for i = 1:loop(2)
+        % Solving linear dispersion relationship:
+        Lprev = 1; Lnew = 0; thresh = 0.01; delta = 1;
+        while delta > thresh
+            Lprev = Lnew;
+            Lnew = (9.81*T(j)^2)/(2*pi)*tanh((2*pi*h(i))/Lprev);
+            delta = abs(Lnew - Lprev);
+        end
+        k = (2*pi)/Lnew;
+        
+        u_b(j,i) = (H(j,i)/2)*omegaf(j)/sinh(k*h(i));
+    end
+end
 
+u_bsqr = u_b.^2;
+
+    % BEGIN SWITCH
 switch Method
     
     
 %% Representative Orbital Velocity Method
 
     case {'R','r'}     
-        u_b = zeros(loop(1),loop(2));
-        for j = 1:loop(1)
-            for i = 1:loop(2)
-                    % Solving linear dispersion relationship:
-                Lprev = 1; Lnew = 0; thresh = 0.01; delta = 1;
-                while delta > thresh
-                    Lprev = Lnew;
-                    Lnew = (9.81*T(j)^2)/(2*pi)*tanh((2*pi*h(i))/Lprev);
-                    delta = abs(Lnew - Lprev);
-                end
-                k = (2*pi)/Lnew;
-         
-                %u_b(j,i) = H(j,i)./(sinh(h(i).*k)*ff(j));  
-                u_b(j,i) = (H(j,i)/2)*omegaf(j)/sinh(k*h(i));
-            end
-        end
-
-        u_bsqr = u_b.^2;
+        
         
         fw = zeros(loop(1),loop(2));
         u_br = zeros(1,loop(2));
@@ -118,8 +127,6 @@ switch Method
 
 
 
-
-
 %% Mean Energy-Weighted Bottom Orbital Velocity Method:  
 
     case {'M','m'}
@@ -154,51 +161,28 @@ switch Method
         
         u_br = u_bTm;
 
+        
+end     %END SWITCH
 
-end
 
+%% Calculating TED_fe
 
-%% Calculating TED_N
-% Calculate the theoretical energy dissipation using the calculated
-% friction factors
-% Note: Urms is what is origionally used in the final equation but
-%        instead we use u_br
+fw_r = sum(fw.*u_bsqr)./sum(u_bsqr);
 
-% u_b = zeros(loop(1),loop(2));
-% for j = 1:loop(1)
-%     for i = 1:loop(2)
-%         % Solving linear dispersion relationship:
-%         Lprev = 1; Lnew = 0; thresh = 0.01; delta = 1;
-%         while delta > thresh
-%             Lprev = Lnew;
-%             Lnew = (9.81*T(j)^2)/(2*pi)*tanh((2*pi*h(i))/Lprev);
-%             delta = abs(Lnew - Lprev);
-%         end
-%         k = (2*pi)/Lnew;
-%         
-%         u_b(j,i) = (H(j,i)/2)*omegaf(j)/sinh(k*h(i));
-%     end
-% end
-
-%u_bsqr = u_b.^2;
-
-%u_rms = zeros(1,loop(2));  Urms is what is origionally used in the final
-%                           equation but instead we use u_br
-
-TED_N = zeros(loop(1),loop(2));
-for i = 1:loop(2)
-   % u_rms(i) = sqrt((1/loop(1)).*sum(u_bsqr(:,i)));
-    for j = 1:loop(1)
-        TED_N(j,i) = 0.6.*rho.*fw(j,i).*u_br(i).^3;
+phi_j = zeros(loop(1),loop(2));
+fe = zeros(loop(1),loop(2));
+TED_fe = zeros(loop(1),loop(2));
+for j = 1:loop(1)
+    for i = 1:loop(2)
+        phi_j(j,i) = 33 - 6.*log10(u_br(i)./(kw.*omegaf(j)));
+        fe(j,i) = sqrt(fw_r(i)).*sqrt(fw(j,i)).*cosd(phi_j(j,i));
+        TED_fe(j,i) = (1/4).*rho.*fe(j,i).*u_br(i).*u_b(j,i).^2;
     end
 end
 
 
 
-
 end
-
-
 
 
 
