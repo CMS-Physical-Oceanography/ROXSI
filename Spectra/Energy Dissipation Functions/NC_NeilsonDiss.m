@@ -3,7 +3,7 @@ function[fw,u_br,fe,TED_fe] = NC_NeilsonDiss(See,ff,h,kw,a1,a2,a3,Method)
 %NC_NEILSONDISS determines the theoretical energy dissipations at each 
 % time and at each frequency by using the energy dissipation factors from 
 % Neilson's [1992] method from "Spectral wave dissipation over a barrier 
-% reef". 
+% reef" by Lowe. 
 %
 %
 % Details:
