@@ -1,7 +1,8 @@
 function[TED,GeoAngle,EWMAngle,Theta] = NC_ObsDiss(See1,See2,Direc1,Direc2,ff,utm1,utm2,h1,h2)
 %
-%NC_OBSDISS determines the energy dissipation between two points 
-%                 (typically buoys) at each time and frequency
+%NC_OBSDISS determines the observed energy dissipation between two points 
+%           (typically buoys) using by comparing the fluxes at the two
+%           points
 %
 %
 % Inputs:
