@@ -21,7 +21,5 @@
 ### Functions
 * **function_NormDir.m** - calculates what incoming wave angle will be normal to the shore in Monterey Bay, California
 * **function_wavecalculateSI.m** - calculates the wavelength, wave number, and celerity 
-* **function_FricFac.m** - Determines the friction factor (fw) at each time and at each frequency using Neilson’s [1992] method taken from “Spectral wave dissipation over a barrier reef”. A method must be selected which specifies which orbital velocity will be calculated.
 * **meanangle.m** - calculates the mean of a set of angles (in degrees) based on polar considerations (Written by J.A. Dunne, 10/20/2005)
-* **function_TEdis.m** - determines the energy dissipation between two points (typically buoys) at each time and frequency
  
