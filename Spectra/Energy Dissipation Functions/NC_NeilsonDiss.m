@@ -78,7 +78,7 @@ u_bsqr = u_b.^2;
 
     % Create the option of the singluar kw input:
 if length(kw) == 1
-    kw = kw.*(ones(1,length(ff)));
+    kw = kw.*(ones(1,loop(1)));
 end
 
 
