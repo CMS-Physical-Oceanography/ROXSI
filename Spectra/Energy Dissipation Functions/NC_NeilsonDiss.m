@@ -3,7 +3,7 @@ function[fw,u_br,fe,TED_fe] = NC_NeilsonDiss(See,ff,h,kw,a1,a2,a3,Method)
 %NC_NEILSONDISS determines the theoretical energy dissipations at each 
 % time and at each frequency by using the energy dissipation factors from 
 % Neilson's [1992] method from "Spectral wave dissipation over a barrier 
-% reef" by Lowe. 
+% reef" by Lowe.
 %
 %
 % Details:
@@ -15,9 +15,11 @@ function[fw,u_br,fe,TED_fe] = NC_NeilsonDiss(See,ff,h,kw,a1,a2,a3,Method)
 %       - See: S eta eta matrix
 %       - ff: a vector of frequencies which See follows 
 %       - h: water depth vector as a function of time
-%       - kw: the roughness length (kw = 0.16 used in paper)
+%       - kw: a vector (with an optional singular value input) of the 
+%          roughness lengths as a function of frequency (kw = 0.16 used in
+%          paper)
 %       - a1, a2, & a3: Neilson's [1992] coefficients which are typically
-%         a1 = 5.5, a2 = -0.2, and a3 = -6.3
+%          a1 = 5.5, a2 = -0.2, and a3 = -6.3
 %       - Method: specify which bottom orbital velocity will be used to
 %          perform the calculation
 %               - The 3 Options:
@@ -74,6 +76,12 @@ end
 
 u_bsqr = u_b.^2;
 
+    % Create the option of the singluar kw input:
+if length(kw) == 1
+    kw = kw.*(ones(1,length(ff)));
+end
+
+
     % BEGIN SWITCH
 switch Method
     
@@ -88,7 +96,7 @@ switch Method
             u_br(i) = sqrt(sum(u_bsqr(:,i)));
 
             for j = 1:loop(1)
-                fw(j,i) = exp(a1.*(u_br(i)./(kw.*omegaf(j))).^a2 + a3);      
+                fw(j,i) = exp(a1.*(u_br(i)./(kw(j).*omegaf(j))).^a2 + a3);      
             end
         end
         
@@ -121,7 +129,7 @@ switch Method
             u_bTp(i) = (Hs(i)/2)*2*pi/(sinh(h(i)*k(i))*Tp);
 
             for j = 1:loop(1)
-                fw(j,i) = exp(a1.*(u_bTp(i)./(kw.*omegaf(j))).^a2 + a3);
+                fw(j,i) = exp(a1.*(u_bTp(i)./(kw(j).*omegaf(j))).^a2 + a3);
             end
         end
         
@@ -157,7 +165,7 @@ switch Method
             u_bTm(i) = ((Hs(i)/2)*2*pi)/(sinh(h(i)*k)*Tm);
 
             for j = 1:loop(1)
-                fw(j,i) = exp(a1.*(u_bTm(i)./(kw.*omegaf(j))).^a2 + a3);
+                fw(j,i) = exp(a1.*(u_bTm(i)./(kw(j).*omegaf(j))).^a2 + a3);
             end
         end
         
@@ -176,7 +184,7 @@ fe = zeros(loop(1),loop(2));
 TED_fe = zeros(loop(1),loop(2));
 for j = 1:loop(1)
     for i = 1:loop(2)
-        phi_j(j,i) = 33 - 6.*log10(u_br(i)./(kw.*omegaf(j)));
+        phi_j(j,i) = 33 - 6.*log10(u_br(i)./(kw(j).*omegaf(j)));
         fe(j,i) = sqrt(fw_r(i)).*sqrt(fw(j,i)).*cosd(phi_j(j,i));
         TED_fe(j,i) = (1/4).*rho.*fe(j,i).*u_br(i).*u_b(j,i).^2;
     end
