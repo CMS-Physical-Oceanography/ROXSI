@@ -141,8 +141,10 @@ xlabel('Frequency (Hz)');ylabel('Energy Dissipation (W/m)');
 
 plot(ff,TED_fem,'--b','Linewidth',1.5)
 legend('Obs. Dissipation','fe_M Dissipation','location','northeast')
-annotation('textbox',[0.732,0.3,0.15,0.04],'String',...
-    sprintf('k_w = %g\n',kw))
+
+    % To add the annotion of what kw is equal to:
+%annotation('textbox',[0.732,0.3,0.15,0.04],'String',...
+%    sprintf('k_w = %g\n',kw))
 
 
 
