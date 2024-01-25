@@ -1,7 +1,7 @@
 %% Ex_DissFunctions.m
 %
 % Purpose:
-%           To give a simple example of how the NC_NeilsonDiss and
+%           To give a simple example of how the NC_NielsenDiss and
 %            NC_ObsDiss can be applied. Here, we are given a few simple
 %            time averaged data sets which are all required for the
 %            functions.
@@ -9,7 +9,7 @@
 % Goal:
 %           To determine and compare the observed energy dissipation(from
 %            NC_ObsDiss) and the theoretical energy dissipation (from 
-%            NC_NeilsonDiss).
+%            NC_NielsenDiss).
 %
 %
 %
@@ -56,16 +56,16 @@ load('ExData_DissFunctions.mat')
 %         NC_ObsDiss function
 %
 % - TED_fem (TED_fem1 & TED_fem2): the theoretical energy dissipation
-%            calculated using the NC_NeilsonDiss function with the "m" 
+%            calculated using the NC_NielsenDiss function with the "m" 
 %            (energy weighted mean) method
 %
-% - fw_m (fw_m1 & fw_m2): the Neilson friction factors calculated using 
+% - fw_m (fw_m1 & fw_m2): the Nielsen friction factors calculated using 
 %         the mean orbital velocity method
 %
 % - u_br (u_br1 & u_br2): the representative bottom orbital velocity
 %
 %
-% - fe_m (fe_m1 & fe_m2): Neilson energy dissipation factors calculated
+% - fe_m (fe_m1 & fe_m2): Nielsen energy dissipation factors calculated
 %         using the mean orbital velocity method
 %
 % - GeoAngle: The angle made by connecting a line through the
@@ -80,7 +80,7 @@ load('ExData_DissFunctions.mat')
 
 %% Constants
 
-%                    **Neilson's Constants** 
+%                    **Nielsen's Constants** 
 %
 % - These are the exact constants used in the paper
 
@@ -104,16 +104,16 @@ load('ExData_DissFunctions.mat')
 % - The only method that will be used in this example is the method where
 %    the energy-weighted mean bottom orbital velocity will be used as the
 %    bottom orbital velocity to make the calculations
-% - Call NC_NeilsonDiss twice to calculate the dissipation at the locations 
+% - Call NC_NielsenDiss twice to calculate the dissipation at the locations 
 %    of each of the buoys and then average afterwards to find the best 
 %    estimate for the energy dissipated between the two points
 
 [TED,GeoAngle,EWMAngle,Theta] = ...
     NC_ObsDiss(See1,See2,Direc1,Direc2,ff,utm1,utm2,Depth1,Depth2);
 [fw_m1,u_br1,fe_m1,TED_fem1] = ...
-    NC_NeilsonDiss(See1,ff,Depth1,kw,a1,a2,a3,'m');
+    NC_NielsenDiss(See1,ff,Depth1,kw,a1,a2,a3,'m');
 [fw_m2,u_br2,fe_m2,TED_fem2] = ...
-    NC_NeilsonDiss(See2,ff,Depth2,kw,a1,a2,a3,'m');
+    NC_NielsenDiss(See2,ff,Depth2,kw,a1,a2,a3,'m');
 
 % Here, we find the average so we can best estimate the energy dissipation
 %  between the two instead of just at one or the other
@@ -126,11 +126,11 @@ subplot(2,1,1)
 plot(ff,See1,'-b','LineWidth',1.5)
 hold on; grid on;
 plot(ff,See2,'-r','LineWidth',1.5)
-title('Frequency Spectrum at Point 1 and Point 2')
+title('Energy Spectrum at Point 1 and Point 2')
 xlabel('Frequency (Hz)'); ylabel('Energy (m^2/Hz)');
 legend(sprintf('Point 1 (Avg Depth (m) = %g\n',Depth1),...
     sprintf('Point 2 (Avg Depth (m) = %g\n',Depth2),'Location','northeast')
-xlim([0 .50]);ylim([-0.2 1]);
+xlim([0 .50]);ylim([-0.1 1]);
 
 subplot(2,1,2)
 plot(ff,TED,'-m','LineWidth',2);
@@ -145,7 +145,6 @@ legend('Obs. Dissipation','fe_M Dissipation','location','northeast')
     % To add the annotion of what kw is equal to:
 %annotation('textbox',[0.732,0.3,0.15,0.04],'String',...
 %    sprintf('k_w = %g\n',kw))
-
 
 
 
