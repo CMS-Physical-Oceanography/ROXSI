@@ -3,14 +3,11 @@
 % Noah Clark            2/2/2024
 %
 %
-% Purpose: Create two plots with 3 subplots each. One of the plots is the
+% Purpose: Create two figures with 3 subplots each. One of the plots is the
 %          total energy, the average direction, and the average directional
 %          spread in the sea band per day for each of the 3 buoys. The
-%          other plot is the same thing but for the swell band. 
+%          other figure has the same 3 subplots but for the swell band. 
 %
-%
-% Questions:
-%   - When integrating energy should I do 4*sqrt() to get H?
 %
 % ------------------------------------------------------------------------
 % ------------------------------------------------------------------------
