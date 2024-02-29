@@ -1,5 +1,5 @@
-## ROXSI Wave Spectra
-**Codes from Noah Clark to calculate wave characteristics based on wave buoy measurements**
+## ROXSI Wave Spectra (Summer 2023)
+**Codes from Noah Clark to calculate wave characteristics based on wave buoy measurements from Summer 2023**
 
 * **Start.m** - script with all code that I've completed through 6/19
 * **Description_WBvariables.m** - a description of every variable saved in the file WBvariables.m (found in Data Folder)
@@ -23,3 +23,5 @@
 * **function_wavecalculateSI.m** - calculates the wavelength, wave number, and celerity 
 * **meanangle.m** - calculates the mean of a set of angles (in degrees) based on polar considerations (Written by J.A. Dunne, 10/20/2005)
  
+### Data
+* **WBvariables.mat** - All of the calculated buy data. All of the data was calculated over the summer 2023.
