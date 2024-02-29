@@ -1,5 +1,6 @@
 ## ROXSI Wave Spectra (Fall 2023)
 **Codes from Noah Clark to calculate wave characteristics based on wave buoy measurements from Fall 2023**
+**August 2023 - December 2023**
 
 ### Plotting
 * **plot_CompObsNiel.m** - Plot the integrated obs diss vs the integrated nielsen diss. These are integrated over the sea and swell bands separately
