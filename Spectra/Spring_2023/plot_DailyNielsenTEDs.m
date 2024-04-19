@@ -119,7 +119,7 @@ B.ASee{4} = (ADCP.B10.See + ADCP.B13.See)./2;
 
         % EWM PER DAY FOR SEA AND SWELL:
 for j = 1:4
-    if j == 1
+    if j == 1 % B01 to B03
         N = 725;
     elseif j == 2 % B03 to B05
         N = 832;
@@ -269,7 +269,7 @@ end
 
 
 
-%% Average Nielsen TED b/t buoys
+%% Average Nielsen TED b/t Buoys
 
 for i = 1:4
     % China Rock
@@ -279,7 +279,6 @@ for i = 1:4
     X.Avg_NTED_Sea{i} = nanmean(X.EWM_DD_NielsenSea{i});
     X.Avg_NTED_Swell{i} = nanmean(X.EWM_DD_NielsenSwell{i});
 end
-
 
 
 
@@ -300,7 +299,7 @@ legend('B01 - B03 (AVG=0.117)','B03 - B05 (AVG=0.192)',...
     'B05 - B10 (AVG=0.306)','B10 - B13 (AVG=0.727)','fontsize',10,...
     'location','north')
 xlabel('Date','fontsize',15)
-ylabel('Nielsen TED','fontsize',15)
+ylabel('Nielsen TED [W/m]','fontsize',15)
 ylim([0 2.5])
 xlim([datetime(2022,6,15) datetime(2022,7,20)])
 
@@ -317,7 +316,7 @@ legend('B01 - B03 (AVG=0.111)','B03 - B05 (AVG=0.204)',...
     'B05 - B10 (AVG=0.451)','B10 - B13 (AVG=0.900)','fontsize',10,...
     'location','north')
 xlabel('Date','fontsize',15)
-ylabel('Nielsen TED','fontsize',15)
+ylabel('Nielsen TED [W/m]','fontsize',15)
 ylim([0 2.5])
 xlim([datetime(2022,6,15) datetime(2022,7,20)])
 
@@ -334,7 +333,7 @@ legend('X01 - X03 (AVG=0.177)','X03 - X04 (AVG=0.262)',...
     'X04 - X05 (AVG=0.206)','X05 - X11 (AVG=0.279)','fontsize',10,...
     'location','north')
 xlabel('Date','fontsize',15)
-ylabel('Nielsen TED','fontsize',15)
+ylabel('Nielsen TED [W/m]','fontsize',15)
 ylim([0 1.65])
 xlim([datetime(2022,6,15) datetime(2022,7,20)])
 
@@ -351,15 +350,15 @@ legend('X01 - X03 (AVG=0.241)','X03 - X04 (AVG=0.431)',...
     'X04 - X05 (AVG=0.601)','X05 - X11 (AVG=0.513)','fontsize',10,...
     'location','north')
 xlabel('Date','fontsize',15)
-ylabel('Nielsen TED','fontsize',15)
+ylabel('Nielsen TED [W/m]','fontsize',15)
 ylim([0 1.65])
 xlim([datetime(2022,6,15) datetime(2022,7,20)])
 
 
 
+%% Clean Up
 
-
-
+clear i j N m0Sea m0Swell m1Sea m1Swell
 
 
 
