@@ -8,6 +8,7 @@
 * **plot_DailyShoalB.m** - Calculate the observed and theoretical shoaling coefficeints at each hour and determine the EWM for each hour in the sea and swell bands. Then average the houyrs per day. This is done for all spotter buoys and ADCPs at China Rock.
 * **plot_DailyShoalX.m** - Calculate the observed and theoretical shoaling coefficeints at each hour and determine the EWM for each hour in the sea and swell bands. Then average the houyrs per day. This is done for all spotter buoys and ADCPs at Asilomar.
 * **plot_DailyNielsenTEDs.m** - Perform Nielsen TED analysis and determine the EWM per hour in the sea and swell bands of these TED values. Then plot these Nielsen TED daily averages. This is done for all spotter buoys and ADCPs at China Rock and Asilomar.
+* **plot_DailyObsTEDs.m** - Perform observed TED analysis and determine the EWM per hour in the sea and swell bands of these TED values. Then plot these observed TED daily averages. This is done for all spotter buoys and ADCPs at China Rock and Asilomar.
 
 ### Calculating
 * **calc_ShoalCoeff.m** - Calculate the shoaling coefficients between the instruments by E1/E2 and compare it against the shoaling coefficients using sqrt(Cg2/Cg1) at three time periods. Those time periods were determined by isolating 3 24 hour periods where the energy was either mostly from the Sea, the Swell, or the energy was consisted of a mix similar to the entire time average
