@@ -266,10 +266,35 @@ ylim([0.5 2.2])
 xlim([datetime(2022,6,15) datetime(2022,7,20)])
 
 
+%% Plot Using Colorbar method
 
-%% Plot Time Averaged for June 30th
+Ks_Sea = ones(4,length(Tday)) + NaN;
+Ks_Sea(1,1:28) = EWM_DD_KsO_Sea{1};
+Ks_Sea(2,:) = EWM_DD_KsO_Sea{2};
+Ks_Sea(3,10:end) = EWM_DD_KsO_Sea{3};
+Ks_Sea(4,10:end) = EWM_DD_KsO_Sea{4};
+
+% Depths = [4:1];
 
 figure(3);clf;
+imagesc(datenum(Tday),[1:4],Ks_Sea)
+set(gca,'ydir','normal')
+colormap(blue2red(11))
+colorbar
+caxis([0.6 1.4])
+
+
+
+
+
+
+
+
+
+%% Check
+    % Plot Time Averaged for June 30th
+
+figure(4);clf;
 plot(ff,mean(See{3}(:,337:360),2),'-m')
 hold on; grid on;
 plot(ffa,mean(ADCP.B10.See(:,121:144),2),'-g')
@@ -283,9 +308,9 @@ ylabel('E')
 legend('B05','B10','B13')
 
 
-%% Plot TIme Averaged for July  13th
+    % Plot Time Averaged for July  13th
 
-figure(4);clf;
+figure(5);clf;
 plot(ff,mean(See{3}(:,649:672),2),'-m')
 hold on;grid on;
 plot(ffa,mean(ADCP.B10.See(:,433:456),2),'-g')
@@ -299,9 +324,9 @@ ylabel('E')
 legend('B05','B10','B13')
 
 
-%% Plot  Overall Time Averaged Spectrums
+    % Plot  Overall Time Averaged Spectrums
 
-figure(5);clf;
+figure(6);clf;
 plot(ff,mean(See{1},2),'b')
 hold on; grid on;
 plot(ff,nanmean(See{2},2),'m')
