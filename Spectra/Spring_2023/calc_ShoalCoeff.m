@@ -355,7 +355,7 @@ Matrix_Ks_Cg = [SeaP.Ks_Cg{1}(1:21);SeaP.Ks_Cg{2}(1:21);...
 
 
 %% Figure for OSM
-% Find same plot but for entire time average 
+% Find same plot but for ENTIRE TIME AVERAGE
 
 % Average Sees
 load('WBvariables.mat','BSee')
@@ -402,13 +402,13 @@ ylim([0.8 2])
 clear i i1 i2 A
 
 % Save Variables
-save('3Periods.mat','SeaP','SwellP','BothP')
+%save('3Periods.mat','-append','SeaP','SwellP','BothP')
 
 % Save Figures
-cd 'Spring Figures/Shoal_Coeff_Plots'
-saveas(figure(1),'Sea_ShoalCoef.jpeg')
-saveas(figure(2),'Swell_ShoalCoef.jpeg')
-saveas(figure(3),'Both_ShoalCoef.jpeg')
+% cd 'Spring Figures/Shoal_Coeff_Plots'
+% saveas(figure(1),'Sea_ShoalCoef.jpeg')
+% saveas(figure(2),'Swell_ShoalCoef.jpeg')
+% saveas(figure(3),'Both_ShoalCoef.jpeg')
 
 
 

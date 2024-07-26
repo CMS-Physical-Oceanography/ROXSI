@@ -81,25 +81,37 @@ B05FracSea = sum(BSee{3}(10:25,:),'all')/sum(BSee{2},'all'); % 0.703
 B05FracSwell = sum(BSee{3}(5:10,:),'all')/sum(BSee{2},'all'); % 0.142
 
 % B10
-addpath('../Fall (0825)/ADCP Data')
+addpath('C:\Users\nsc4750\OneDrive - UNC-Wilmington\CMS Work\Fall (0825)\ADCP Data')
 load('roxsi_signature_L2_B10_See.mat')
 See_B10 = A.See;
-B10FracSea = nansum(See_B10(33:89,:),'all')/nansum(See_B10,'all') % 0.748
-B10FracSwell = nansum(See_B10(15:33,:),'all')/nansum(See_B10,'all') % 0.112
+B10FracSea = nansum(See_B10(33:89,:),'all')/nansum(See_B10,'all'); % 0.748
+B10FracSwell = nansum(See_B10(15:33,:),'all')/nansum(See_B10,'all'); % 0.112
 % B13
 load('roxsi_signature_L2_B13_See.mat')
 See_B13 = A.See;
-B13FracSea = nansum(See_B13(33:89,:),'all')/nansum(See_B13,'all') % 0.687
-B13FracSwell = nansum(See_B13(15:33,:),'all')/nansum(See_B13,'all') % 0.206
+B13FracSea = nansum(See_B13(33:89,:),'all')/nansum(See_B13,'all'); % 0.687
+B13FracSwell = nansum(See_B13(15:33,:),'all')/nansum(See_B13,'all'); % 0.206
 
 % Average for all 5
 AVGFracSea = mean([B01FracSea B03FracSea B05FracSea B10FracSea B13FracSea]); % 0.738
-AVGFracSwell = mean([B01FracSwell B03FracSwell B05FracSwell B10FracSwell B13FracSwell]) % 0.139
+AVGFracSwell = mean([B01FracSwell B03FracSwell B05FracSwell B10FracSwell B13FracSwell]); % 0.139
+
+
+%% Create Table
+
+Buoys = ['B01';'B03';'B05';'B10';'B13';'AVG'];
+SeaFraction = [B01FracSea;B03FracSea;B05FracSea;B10FracSea;B13FracSea;AVGFracSea];
+SeaFraction = round(SeaFraction,3);
+SwellFraction = [B01FracSwell;B03FracSwell;B05FracSwell;B10FracSwell;B13FracSwell;AVGFracSwell];
+SwellFraction = round(SwellFraction,3);
+
+SeaSwellFraction = table(Buoys,SeaFraction,SwellFraction)
+
 
 %% Save Figure
 
-cd 'Spring Figures/Daily_Averages'
-saveas(figure(1),'TotalE_fraction.jpeg')
+%cd 'Spring Figures/Daily_Averages'
+%saveas(figure(1),'TotalE_fraction.jpeg')
 
 
 
